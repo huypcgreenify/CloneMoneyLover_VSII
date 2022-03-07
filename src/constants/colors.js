@@ -8,6 +8,5 @@ export default {
     success: 'blue',
     alert: 'red',
     warning: 'orange',
-    messengers: 'rgba(0,0,0,0.1)',
     btnLR:'rgba(0,0,0,0.09)'
 }   
