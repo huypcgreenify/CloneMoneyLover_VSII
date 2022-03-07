@@ -7,9 +7,9 @@ import Profile from './Proflie/screens/Profile'
 
 export {
     Welcome,
-    Register,
-    Login,
-    TransactionBook,
-    AddWallet,
-    Profile
+    // Register,
+    // Login,
+    // TransactionBook,
+    // AddWallet,
+    // Profile
 }
