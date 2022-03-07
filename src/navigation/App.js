@@ -17,10 +17,10 @@ const Stack = createNativeStackNavigator()
 
 const App = (props) => {
     return <NavigationContainer style={{}}>
-        <Stack.Navigator initialRouteName='Welcome' screenOptions={{ headerShown: false }} >
-            <Stack.Screen name={'Welcome'} component={Welcome}></Stack.Screen>
+        <Stack.Navigator initialRouteName='UITabView' screenOptions={{ headerShown: false }} >
+            {/* <Stack.Screen name={'Welcome'} component={Welcome}></Stack.Screen>
             <Stack.Screen name={'Login'} component={Login}></Stack.Screen>
-            <Stack.Screen name={'Register'} component={Register}></Stack.Screen>
+            <Stack.Screen name={'Register'} component={Register}></Stack.Screen> */}
             <Stack.Screen name={'UITabView'} component={UITabView}></Stack.Screen>
         </Stack.Navigator>
     </NavigationContainer >
