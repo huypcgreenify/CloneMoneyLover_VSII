@@ -3,3 +3,7 @@ export const isValidEmail = (stringEmail) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test
 
 //Validate Password
 export const isValidPassword = (stringPassword) => stringPassword.length >= 3
+
+//Validate InputText
+export const isValInput = (stringInput) => (/^\d+$/).test(stringInput)
+

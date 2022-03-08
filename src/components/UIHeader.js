@@ -8,7 +8,8 @@ const UIHeader = (props) => {
         leftIconName,
         rightIconName,
         onPressLeftIcon,
-        onPressRightIcon
+        onPressRightIcon,
+        textUIHeader
     } = props //truyền dữ liệu từ màn này sang màn khác
 
     return <View style={{
@@ -57,7 +58,7 @@ const UIHeader = (props) => {
                     justifyContent: 'center',
                 }}><Text style={{
                     fontSize: 16,
-                }}>Lưu</Text>
+                }}>{textUIHeader}</Text>
             </TouchableOpacity>}
     </View>
 }

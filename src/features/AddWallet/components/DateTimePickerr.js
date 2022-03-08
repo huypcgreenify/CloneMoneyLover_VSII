@@ -32,23 +32,30 @@ const DateTimePickerr = (props) => {
     };
 
     return <View>
-        <TouchableOpacity onPress={showDatepicker}>
+        <TouchableOpacity
+            style={{
+                width: 250,
+            }}
+            onPress={showDatepicker} >
             <Text style={{
                 fontSize: 16,
                 color: 'black',
             }}>{text}</Text>
         </TouchableOpacity>
-        {show && (
-            <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-            />
-        )}
-    </View>
+        {
+            show && (
+                <DateTimePicker
+                    style={{ flex: 1, backgroundColor: 'red' }}
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={mode}
+                    is24Hour={true}
+                    display="default"
+                    onChange={onChange}
+                />
+            )
+        }
+    </View >
 }
 
 export default DateTimePickerr

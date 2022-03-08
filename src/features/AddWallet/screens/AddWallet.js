@@ -1,23 +1,27 @@
 import React, { useState } from "react"
-import { Text, View, TouchableOpacity, Image, TouchableHighlight } from "react-native"
+import { Text, View, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import DateTimePickerr from '../components/DateTimePickerr'
-import DateTimePicker from '@react-native-community/datetimepicker'
-import moment from 'moment'
+import { isValInput } from '../../../utilies/Validations'
+import ItemPickerGroup from '../components/ItemPickerGroup'
 
 const AddWallet = (props) => {
 
     const { navigate, goBack } = props.navigation
+    const [money, setMoney] = useState('')
 
-
-    return <View style={{
-        flex: 1,
-    }}>
+    return <KeyboardAvoidingView
+        enabled
+        behavior={Platform.OS === "ios" ? "padding" : 'height'}
+        style={{
+            flex: 1,
+        }}>
         <UIHeader
             title={'Thêm Giao Dịch'}
             leftIconName={'arrow-left'}
+            textUIHeader={'Lưu'}
             rightIconName={undefined}
             onPressLeftIcon={() => {
                 goBack()
@@ -26,238 +30,218 @@ const AddWallet = (props) => {
                 alert('phải')
             }}
         />
-        <View style={{
-            marginTop: 20,
-            backgroundColor: 'white',
-            flex: 0.5,
-            marginTop: 35,
-            flexDirection: 'row',
-            paddingTop: 5
-        }}>
+        <ScrollView>
             <View style={{
-                flex: 0.2,
-                justifyContent: 'center',
-                alignItems: 'center'
+                marginTop: 20,
+                backgroundColor: 'white',
+                marginTop: 35,
+                flexDirection: 'row',
+                paddingTop: 5
             }}>
                 <View style={{
-                    flex: 0.23,
+                    flex: 0.2,
                     justifyContent: 'center',
+                    alignItems: 'center'
                 }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('VND')
-                        }}
-                        style={{
-                            marginTop: 22,
-                            borderWidth: 1,
-                            height: 33,
-                            width: 55,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 5,
-                            borderColor: '#E6E6E6'
-                        }}><Text
+                    <View style={{
+                        marginTop: 5,
+                        marginBottom: 6,
+                        flex: 0.2,
+                        justifyContent: 'center',
+                    }}>
+                        <View
                             style={{
-                                textAlign: 'center',
-                                fontWeight: 'bold',
-                                fontSize: fontSizes.h5,
-                                color: colors.inactive
-                            }}>VND</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    flex: 0.23,
-                    justifyContent: 'center',
-                }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('Nhóm')
-                        }}
-                        style={{
-                            height: 40,
-                            width: 40,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 30,
-                            backgroundColor: '#E6E6E6'
-                        }}><View
+                                marginTop: 22,
+                                borderWidth: 1,
+                                height: 33,
+                                width: 55,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 5,
+                                borderColor: '#E6E6E6'
+                            }}><Text
+                                style={{
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: fontSizes.h5,
+                                    color: colors.inactive
+                                }}>VND</Text>
+                        </View>
+                    </View>
+                    <View style={{
+                        marginTop: 8,
+                        marginBottom: 10,
+                        flex: 0.2,
+                        justifyContent: 'center',
+
+                    }}>
+                        <View
                             style={{
-                            }}></View>
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    flex: 0.18,
-                    justifyContent: 'center',
-                }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('Ghi chú')
-                        }}
-                        style={{
-                            height: 44,
-                            width: 44,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 30,
-                        }}>
-                        <Icon name={'sticky-note'} size={22}></Icon>
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    justifyContent: 'center',
-                    flex: 0.18,
-                }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('Lịch')
-                        }}
-                        style={{
-                            height: 44,
-                            width: 44,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 30,
-                        }}>
-                        <Icon name={'calendar-alt'} size={22}></Icon>
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    justifyContent: 'center',
-                    flex: 0.18,
-                }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('Tiền mặt')
-                        }}
-                        style={{
-                            height: 44,
-                            width: 44,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 30,
-                        }}>
-                        <Image source={images.wallet}
+                                height: 40,
+                                width: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 30,
+                                backgroundColor: '#E6E6E6'
+                            }}><View
+                                style={{
+                                }}></View>
+                        </View>
+                    </View>
+                    <View style={{
+                        marginTop: 2,
+                        marginBottom: 5,
+                        justifyContent: 'center',
+                        flex: 0.2
+                    }}>
+                        <View
                             style={{
-                                width: 26,
-                                height: 26,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 30,
+                            }}>
+                            <Icon name={'sticky-note'} size={22}></Icon>
+                        </View>
+                    </View>
+                    <View style={{
+                        marginTop: 10,
+                        flex: 0.2,
+                        justifyContent: 'center',
+                    }}>
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 30,
+                            }}>
+                            <Icon name={'calendar-alt'} size={22}></Icon>
+                        </View>
+                    </View>
+                    <View style={{
+                        marginTop: 15,
+                        marginBottom: 5,
+                        flex: 0.2,
+                        justifyContent: 'center',
+                    }}>
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 30,
+                            }}>
+                            <View
+                                style={{
+                                    width: 26,
+                                    height: 26,
+                                }} />
+                        </View>
+                    </View>
+                </View>
+                <View style={{
+                    flex: 0.8,
+                    flexDirection: 'column',
+                }}>
+                    <View style={{
+                        borderBottomWidth: 1,
+                        borderColor: '#E6E6E6',
+                        justifyContent: 'center',
+                    }}>
+                        <Text style={{
+                            fontSize: fontSizes.h5,
+                        }}>Số tiền</Text>
+                        <TextInput
+                            value={money}
+                            onChangeText={(text) => {
+                                { isValInput(text) || text === '' ? setMoney(text) : '' }
+                            }}
+                            keyboardType='numeric'
+                            placeholder='0'
+                            style={{
+                                fontSize: 30,
+                                color: 'black'
                             }} />
-                    </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        borderBottomWidth: 1,
+                        borderColor: '#E6E6E6',
+                        paddingVertical: 3,
+                        justifyContent: 'center',
+                    }}>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}>
+                            <ItemPickerGroup />
+                            <Text style={{
+                                fontSize: 42
+                            }}></Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        justifyContent: 'center',
+                        borderBottomWidth: 1,
+                        borderColor: '#E6E6E6',
+                    }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}>
+                            <TextInput
+                                placeholder='Nhập ghi chú'
+                                maxLength={50}
+                                numberOfLines={1}
+                                style={{
+                                    fontSize: 16,
+                                    color: 'black',
+                                }}></TextInput>
+                        </View>
+                    </View>
+                    <View style={{
+                        paddingVertical: 15,
+                        justifyContent: 'center',
+                        borderBottomWidth: 1,
+                        borderColor: '#E6E6E6',
+                    }}>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}>
+                            <DateTimePickerr />
+                            <Icon style={{
+                                paddingEnd: 15,
+                            }}
+                                name='chevron-right'
+                                size={15} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        justifyContent: 'center',
+                        paddingVertical: 15,
+                    }}>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}>
+                            <Text style={{
+                                fontSize: 16,
+                                color: 'black',
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                            }}>...</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-            <View style={{
-                flex: 0.8,
-                flexDirection: 'column',
-            }}>
-                <View style={{
-                    borderBottomWidth: 1,
-                    borderColor: '#E6E6E6',
-                    flex: 0.23,
-                    justifyContent: 'center',
-                }}>
-                    <Text style={{
-                        fontSize: fontSizes.h5,
-                    }}>Số tiền</Text>
-                    <TouchableOpacity>
-                        <Text style={{
-                            fontSize: 30,
-                            color: 'black'
-                        }}>0</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    borderBottomWidth: 1,
-                    borderColor: '#E6E6E6',
-                    flex: 0.23,
-                    justifyContent: 'center',
-                }}>
-                    <TouchableOpacity
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
-                        <Text style={{
-                            fontSize: 22,
-                            color: colors.inactive,
-                        }}>Chọn nhóm</Text>
-                        <Icon style={{
-                            paddingEnd: 15,
-                        }}
-                            name='chevron-right'
-                            size={15} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    flex: 0.18,
-                    justifyContent: 'center',
-                    borderBottomWidth: 1,
-                    borderColor: '#E6E6E6',
-                }}>
-                    <TouchableOpacity
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
-                        <Text style={{
-                            fontSize: 16,
-                            color: 'black',
-                        }}>Ghi chú</Text>
-                        <Icon style={{
-                            paddingEnd: 15,
-                        }}
-                            name='chevron-right'
-                            size={15} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    flex: 0.18,
-                    justifyContent: 'center',
-                    borderBottomWidth: 1,
-                    borderColor: '#E6E6E6',
-                }}>
-                    <TouchableOpacity
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
-                        {/* <Text style={{
-                            fontSize: 16,
-                            color: 'black',
-                        }}>{moment().format('DD-MM-YYYY')}</Text> */}
-                        <DateTimePickerr />
-                        <Icon style={{
-                            paddingEnd: 15,
-                        }}
-                            name='chevron-right'
-                            size={15} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    justifyContent: 'center',
-                    flex: 0.18,
-                }}>
-                    <TouchableOpacity
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
-                        <Text style={{
-                            fontSize: 16,
-                            color: 'black',
-                        }}>Tiền mặt</Text>
-                        <Icon style={{
-                            paddingEnd: 15,
-                        }}
-                            name='chevron-right'
-                            size={15} />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-    </View>
+        </ScrollView>
+
+    </KeyboardAvoidingView>
 }
 
 export default AddWallet

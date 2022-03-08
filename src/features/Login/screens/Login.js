@@ -9,8 +9,8 @@ const Login = (props) => {
     //Email&Pass - Validate...
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('huy@gmail.com')
+    const [password, setPassword] = useState('111')
     const isValidtionOk = () => email.length > 0
         && password.length > 0
         && isValidEmail(email) == true
@@ -100,6 +100,7 @@ const Login = (props) => {
                     marginTop: 14
                 }}>
                     <TextInput
+                        value={email}
                         onChangeText={(text) => {
                             setErrorEmail(isValidEmail(text) == true ? '' : 'Email không đúng định dạng')
                             setEmail(text)
@@ -119,6 +120,7 @@ const Login = (props) => {
                     />
 
                     <TextInput
+                        value={password}
                         onChangeText={(text) => {
                             setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 3 kí tự')
                             setPassword(text)
@@ -147,7 +149,7 @@ const Login = (props) => {
                         }}>
                         <Icon
                             name={isSecureEntry ? 'eye' : 'eye-slash'}
-                        size={18}
+                            size={18}
                         />
                     </TouchableOpacity>
                 </View>
