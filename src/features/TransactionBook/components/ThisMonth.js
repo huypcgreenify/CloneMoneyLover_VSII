@@ -3,6 +3,16 @@ import { Text, View, Image, TouchableOpacity, Dimensions, useWindowDimensions, S
 import { colors, fontSizes, images } from '../../../constants'
 
 const ThisMonth = (props) => {
+
+    const [transBook, setTransBook] = useState([
+        {
+            dayNumber: 28,
+            dayText: 'Hôm nay',
+            date: '',
+            income: 20000000000,
+        }
+    ])
+
     return <View style={{
         flex: 1
     }}>

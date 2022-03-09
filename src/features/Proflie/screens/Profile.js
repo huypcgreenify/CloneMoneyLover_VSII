@@ -1,9 +1,19 @@
-import React from "react"
+import React, { useState } from "react"
 import { Text, View, SafeAreaView, Image, TouchableOpacity } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import { UIHeader } from '../../../components'
+import {
+    auth,
+    signOut
+} from '../../../firebase/firebase'
 
 const Profile = (props) => {
+
+    const { navigate, goBack } = props.navigation
+    //Subtring email
+    const indexEmail = (auth.currentUser.email).indexOf('@')
+    const subEmail = (auth.currentUser.email).substring(0, indexEmail).toUpperCase()
+
     return <SafeAreaView style={{
         flex: 1,
     }}>
@@ -28,35 +38,52 @@ const Profile = (props) => {
             <Text style={{
                 fontSize: 18,
                 color: 'black'
-            }}> huy</Text>
+            }}>{subEmail}</Text>
             <Text style={{
                 fontSize: fontSizes.h5,
                 color: colors.text
-            }}> huy@gmail.com</Text>
+            }}>{auth.currentUser.email}</Text>
         </View>
-        <TouchableOpacity style={{
-            marginTop: 40,
-            flex: 0.08,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}>
+        <TouchableOpacity
+            onPress={() => {
+
+            }}
+            style={{
+                marginTop: 40,
+                flex: 0.08,
+                backgroundColor: 'white',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
             <Text style={{
                 fontSize: fontSizes.h5,
                 color: colors.primary
             }}>Thay đổi mật khẩu</Text>
-
         </TouchableOpacity>
-        <TouchableOpacity style={{
-            marginTop: 40,
-            flex: 0.08,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}>
+
+        <TouchableOpacity
+            onPress={() => {
+                signOut(auth)
+                    .then((re) => {
+                        // debugger
+                        console.log(re)
+                        navigate('Welcome')
+                        // debugger
+                    }).catch((error) => {
+                        console.log(error)
+                        alert(`Cannot sign in, error: ${error.message}`)
+                    })
+            }}
+            style={{
+                marginTop: 40,
+                flex: 0.08,
+                backgroundColor: 'white',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
             <Text style={{
                 fontSize: fontSizes.h5,
-                color: colors.primary, 
+                color: colors.primary,
                 fontWeight: 'bold'
             }}>Đăng xuất</Text>
         </TouchableOpacity>

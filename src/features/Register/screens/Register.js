@@ -3,14 +3,25 @@ import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, T
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
+import {
+    auth,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseDatabase,
+    doc,
+    setDoc,
+    collection,
+    sendEmailVerification
+} from '../../../firebase/firebase'
+
 
 const Register = (props) => {
 
     //Email&Pass - Validate...
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
-    const [email, setEmail] = useState('huy272@gmail.com')
-    const [password, setPassword] = useState('123456789')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const isValidtionOk = () => email.length > 0
         && password.length > 0
         && isValidEmail(email) == true
@@ -22,6 +33,11 @@ const Register = (props) => {
     //function of navigation to/back
     const { navigate, goBack } = navigation
 
+    //firebase
+    const RegisterUser = () => {
+
+
+    }
     return <View style={{
         backgroundColor: 'white',
         flex: 1,
@@ -115,12 +131,12 @@ const Register = (props) => {
                             borderTopRightRadius: 10,
                         }}
                         placeholder='Email'
-                        keyboardType='email'
+                        keyboardType='email-address'
                     />
 
                     <TextInput
                         onChangeText={(text) => {
-                            setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 3 kí tự')
+                            setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 6 kí tự')
                             setPassword(text)
                         }}
                         style={{
@@ -133,7 +149,6 @@ const Register = (props) => {
                             borderBottomRightRadius: 10,
                         }}
                         placeholder='Mật khẩu'
-                        keyboardType='password'
                         secureTextEntry={true}
                     />
                     <TouchableOpacity style={{
@@ -161,7 +176,16 @@ const Register = (props) => {
                     <TouchableOpacity
                         disabled={!isValidtionOk() == true}
                         onPress={() => {
-                            alert('alo')
+                            createUserWithEmailAndPassword(auth, email, password)
+                                .then(async (re) => {
+                                    let newUserRef = doc(collection(firebaseDatabase, 'users'))
+                                    await setDoc(newUserRef, { email })
+                                    console.log(re)
+                                    alert('Đăng kí thành công, quay về đăng nhập')
+                                    navigate('Login')
+                                }).catch((re) => {
+                                    console.log(re)
+                                })
                         }}
                         style={{
                             backgroundColor: isValidtionOk() == true ? colors.primary : colors.inactive,
