@@ -4,7 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors, fontSizes } from '../constants'
 
 const UIHeader = (props) => {
-    const { title,
+    const {
+        title,
         leftIconName,
         rightIconName,
         onPressLeftIcon,
@@ -22,10 +23,10 @@ const UIHeader = (props) => {
         {leftIconName != undefined ?
             <Icon
                 onPress={onPressLeftIcon}
-                style={{ 
+                style={{
                     padding: 10,
                     alignItems: 'center'
-                 }}
+                }}
                 name={leftIconName}
                 size={23}
                 color={'black'} /> :

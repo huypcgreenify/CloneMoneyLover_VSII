@@ -51,9 +51,6 @@ const Welcome = (props) => {
     useEffect(() => {
         onAuthStateChanged(auth, (responseUser) => {
             if (responseUser) {
-                //             // debugger
-                //             //lưu vào cơ sở dữ liệu firebase và tham chiếu tới 1 bảng
-                //             // debugger
                 let user = {
                     userId: responseUser.uid,
                     email: responseUser.email,

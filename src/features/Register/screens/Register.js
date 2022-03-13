@@ -11,33 +11,46 @@ import {
     doc,
     setDoc,
     collection,
-    sendEmailVerification
+    GoogleSignin,
+    GoogleAuthProvider,
+    signInWithCredential
 } from '../../../firebase/firebase'
-
 
 const Register = (props) => {
 
+    const { width } = useWindowDimensions()
     //Email&Pass - Validate...
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [isSecureEntry, setIsSecureEntry] = useState(true)
     const isValidtionOk = () => email.length > 0
         && password.length > 0
         && isValidEmail(email) == true
         && isValidPassword(password) == true
-
-    const { width } = useWindowDimensions()
-
-    const { navigation, route } = props
     //function of navigation to/back
-    const { navigate, goBack } = navigation
+    const { navigate, goBack } = props.navigation
 
-    //firebase
-    const RegisterUser = () => {
-
-
+    const signInWithGoogleAsync = async () => {
+        try {
+            const { idToken } = await GoogleSignin.signIn();
+            console.log('id: ' + idToken)
+            const googleCredential = GoogleAuthProvider.credential(idToken)
+            console.log('id: ' + googleCredential)
+            const user_sign_in = signInWithCredential(auth, googleCredential)
+            console.log(user_sign_in)
+            user_sign_in.then((users) => {
+                navigate('UITabView')
+                console.log(users)
+            }).catch((error) => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
+
     return <View style={{
         backgroundColor: 'white',
         flex: 1,
@@ -59,17 +72,19 @@ const Register = (props) => {
                     fontSize: fontSizes.h1,
                     color: 'black'
                 }}>Đăng ký</Text>
-                <TouchableOpacity style={{
-                    flexDirection: 'row',
-                    borderWidth: 1,
-                    padding: 5,
-                    borderColor: 'red',
-                    width: '67%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    marginTop: 20,
-                }}>
+                <TouchableOpacity
+                    onPress={signInWithGoogleAsync}
+                    style={{
+                        flexDirection: 'row',
+                        borderWidth: 1,
+                        padding: 5,
+                        borderColor: 'red',
+                        width: '67%',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        marginTop: 20,
+                    }}>
                     <Icon style={{
                         paddingStart: 2
                     }}
@@ -149,15 +164,19 @@ const Register = (props) => {
                             borderBottomRightRadius: 10,
                         }}
                         placeholder='Mật khẩu'
-                        secureTextEntry={true}
+                        secureTextEntry={isSecureEntry}
                     />
-                    <TouchableOpacity style={{
-                        position: 'absolute',
-                        bottom: 23,
-                        right: 25
-                    }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setIsSecureEntry(!isSecureEntry)
+                        }}
+                        style={{
+                            position: 'absolute',
+                            bottom: 23,
+                            right: 25
+                        }}>
                         <Icon
-                            name={'eye'}
+                            name={isSecureEntry ? 'eye' : 'eye-slash'}
                             size={18}
                         />
                     </TouchableOpacity>
@@ -169,7 +188,6 @@ const Register = (props) => {
                 {password.length > 0 ? (errorPassword ? <Text style={{ color: 'red', fontSize: fontSizes.h6, marginBottom: 10 }}>{errorPassword}</Text>
                     : <View></View>) : <View></View>
                 }
-
                 <View style={{
                     width: '65%',
                 }}>
@@ -182,7 +200,7 @@ const Register = (props) => {
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
                                     alert('Đăng kí thành công, quay về đăng nhập')
-                                    navigate('Login')
+                                    navigate('UITabView')
                                 }).catch((re) => {
                                     console.log(re)
                                 })

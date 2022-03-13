@@ -5,11 +5,16 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
 import {
     auth,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    GoogleSignin,
+    GoogleAuthProvider,
+    signInWithCredential
 } from '../../../firebase/firebase'
+
 
 const Login = (props) => {
 
+    const { width } = useWindowDimensions()
     //Email&Pass - Validate...
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
@@ -20,11 +25,23 @@ const Login = (props) => {
         && isValidEmail(email) == true
         && isValidPassword(password) == true
     const [isSecureEntry, setIsSecureEntry] = useState(true)
-
-    const { width } = useWindowDimensions()
-
-    // //function of navigation to/back
+    //function of navigation to/back
     const { navigate, goBack } = props.navigation
+
+    const signInWithGoogleAsync = async () => {
+        const { idToken } = await GoogleSignin.signIn();
+        console.log('id: ' + idToken)
+        const googleCredential = GoogleAuthProvider.credential(idToken)
+        console.log('id: ' + googleCredential)
+        const user_sign_in = signInWithCredential(auth, googleCredential)
+        console.log(user_sign_in)
+        user_sign_in.then((users) => {
+            navigate('UITabView')
+            console.log(users)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
 
     return <View style={{
         backgroundColor: 'white',
@@ -47,17 +64,21 @@ const Login = (props) => {
                     fontSize: fontSizes.h1,
                     color: 'black'
                 }}>Đăng nhập</Text>
-                <TouchableOpacity style={{
-                    flexDirection: 'row',
-                    borderWidth: 1,
-                    padding: 5,
-                    borderColor: 'red',
-                    width: '67%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    marginTop: 20,
-                }}>
+                <TouchableOpacity
+                    onPress={() => {
+                        signInWithGoogleAsync()
+                    }}
+                    style={{
+                        flexDirection: 'row',
+                        borderWidth: 1,
+                        padding: 5,
+                        borderColor: 'red',
+                        width: '67%',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        marginTop: 20,
+                    }}>
                     <Icon style={{
                         paddingStart: 2
                     }}
@@ -171,15 +192,15 @@ const Login = (props) => {
                         disabled={!isValidtionOk() == true}
                         onPress={() => {
                             signInWithEmailAndPassword(auth, email, password)
-                            .then((re) => {
-                                // debugger
-                                console.log(re)
-                                navigate('UITabView')
-                                // debugger
-                            }).catch((error) => {
-                                console.log(error)
-                                alert(`Cannot sign in, error: ${error.message}`)
-                            })
+                                .then((re) => {
+                                    // debugger
+                                    console.log(re)
+                                    navigate('UITabView')
+                                    // debugger
+                                }).catch((error) => {
+                                    console.log(error)
+                                    alert(`Cannot sign in, error: ${error.message}`)
+                                })
                         }}
                         style={{
                             backgroundColor: isValidtionOk() == true ? colors.primary : colors.inactive,

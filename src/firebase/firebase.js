@@ -6,7 +6,11 @@ import {
     sendEmailVerification,
     signInWithEmailAndPassword,
     signOut,
-    updatePassword
+    updatePassword,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    GoogleAuthProvider,
+    signInWithCredential,
 } from 'firebase/auth'
 import {
     getFirestore,
@@ -15,6 +19,7 @@ import {
     doc,
     setDoc,
 } from 'firebase/firestore/lite'
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCi0yDu_CYvnnEZ1nFdiFy_zeg0389920",
@@ -29,6 +34,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const firebaseDatabase = getFirestore(app)
+GoogleSignin.configure({
+    webClientId: '577226254905-i4ukch7nqa1nk9kobuiddsdrhtkcjial.apps.googleusercontent.com',
+});
 
 export {
     auth,
@@ -42,5 +50,10 @@ export {
     signOut,
     doc,
     setDoc,
-    updatePassword
+    updatePassword,
+    EmailAuthProvider,
+    GoogleSignin,
+    reauthenticateWithCredential,
+    GoogleAuthProvider,
+    signInWithCredential
 }

@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import Modal from "react-native-modal";
 
 const ItemPickerGroup = (props) => {
 

@@ -1,20 +1,29 @@
 import React, { useState } from "react"
-import { Text, View, SafeAreaView, Image, TouchableOpacity } from "react-native"
+import { Text, View, SafeAreaView, Image, TouchableOpacity, Button, TextInput } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import { UIHeader } from '../../../components'
 import {
     auth,
-    signOut
+    signOut,
+    GoogleSignin
 } from '../../../firebase/firebase'
+import Modal from "react-native-modal"
+import {
+    isValidEmail,
+    isValidPassword,
+    subEmailName
+} from '../../../utilies/Validations'
+import ModalProfile from "../components/ModalProfile"
 
 const Profile = (props) => {
 
     const { navigate, goBack } = props.navigation
-    //Subtring email
-    const indexEmail = (auth.currentUser.email).indexOf('@')
-    const subEmail = (auth.currentUser.email).substring(0, indexEmail).toUpperCase()
+    const [isModalVisible, setModalVisible] = useState(false)
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    }
 
-    return <SafeAreaView style={{
+    return <View style={{
         flex: 1,
     }}>
         <UIHeader
@@ -38,17 +47,17 @@ const Profile = (props) => {
             <Text style={{
                 fontSize: 18,
                 color: 'black'
-            }}>{subEmail}</Text>
+            }}>{subEmailName()}</Text>
             <Text style={{
                 fontSize: fontSizes.h5,
                 color: colors.text
             }}>{auth.currentUser.email}</Text>
         </View>
-        <TouchableOpacity
-            onPress={() => {
 
-            }}
+        <TouchableOpacity
+            onPress={toggleModal}
             style={{
+                display: auth.currentUser.photoURL ? 'none' : 'flex',
                 marginTop: 40,
                 flex: 0.08,
                 backgroundColor: 'white',
@@ -60,19 +69,24 @@ const Profile = (props) => {
                 color: colors.primary
             }}>Thay đổi mật khẩu</Text>
         </TouchableOpacity>
-
+        <ModalProfile isModalVisible={isModalVisible} toggleModal={toggleModal} />
         <TouchableOpacity
-            onPress={() => {
-                signOut(auth)
-                    .then((re) => {
-                        // debugger
-                        console.log(re)
-                        navigate('Welcome')
-                        // debugger
-                    }).catch((error) => {
-                        console.log(error)
-                        alert(`Cannot sign in, error: ${error.message}`)
-                    })
+            onPress={async () => {
+                try {
+                    await GoogleSignin.signOut()
+                    signOut(auth)
+                        .then((re) => {
+                            // debugger
+                            console.log(re)
+                            navigate('Welcome')
+                            // debugger
+                        }).catch((error) => {
+                            console.log(error)
+                            alert(`Cannot sign in, error: ${error.message}`)
+                        })
+                } catch (error) {
+                    console.log(error)
+                }
             }}
             style={{
                 marginTop: 40,
@@ -87,7 +101,7 @@ const Profile = (props) => {
                 fontWeight: 'bold'
             }}>Đăng xuất</Text>
         </TouchableOpacity>
-    </SafeAreaView>
+    </View>
 }
 
 export default Profile
