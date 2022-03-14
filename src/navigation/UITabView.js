@@ -63,8 +63,6 @@ const UITabView = (props) => {
                 { tabBarLabel: 'Tài khoản' }
             }></Tab.Screen>
     </Tab.Navigator>
-
-
 }
 
 export default UITabView
