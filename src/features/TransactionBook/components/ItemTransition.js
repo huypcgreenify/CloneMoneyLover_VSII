@@ -36,10 +36,12 @@ const ItemTransition = (props) => {
                     flexDirection: 'column',
                 }}>
                     <Text style={{
+                        color: colors.text,
                         fontSize: fontSizes.h5,
                         fontWeight: 'bold'
                     }}>{moment().format('DD') ? 'Hôm nay' : 'Các ngày trước'}</Text>
                     <Text style={{
+                        color: colors.text,
                         fontSize: fontSizes.h5,
                     }}>tháng {item.monthYear}</Text>
                 </View>
@@ -80,10 +82,12 @@ const ItemTransition = (props) => {
                     flexDirection: 'column',
                 }}>
                     <Text style={{
+                        color: colors.text,
                         fontSize: fontSizes.h5,
                         fontWeight: 'bold'
                     }}>Thu nhập khác</Text>
                     <Text style={{
+                        color: colors.text,
                         fontSize: fontSizes.h5,
                     }}>Điều chỉnh số dư</Text>
                 </View>

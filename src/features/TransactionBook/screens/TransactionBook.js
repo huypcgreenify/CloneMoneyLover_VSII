@@ -34,7 +34,8 @@ const TransactionBook = (props) => {
                     size={14}
                     style={{
                         marginLeft: 7
-                    }} />
+                    }}
+                    color={colors.text} />
             </TouchableOpacity>
             <View style={{
                 marginTop: 9,
@@ -44,6 +45,7 @@ const TransactionBook = (props) => {
                 alignItems: 'center'
             }}>
                 <Text style={{
+                    color: colors.text,
                     textAlign: 'center',
                     fontSize: fontSizes.h6
                 }}>Tiền mặt</Text>

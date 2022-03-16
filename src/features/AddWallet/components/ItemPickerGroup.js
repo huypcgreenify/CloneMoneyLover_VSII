@@ -15,7 +15,10 @@ const ItemPickerGroup = (props) => {
         <Picker
             dropdownIconColor={'#6F6F6F'}
             selectedValue={selectedValue}
-            style={{ flex: 1, }}
+            style={{
+                flex: 1,
+                color: colors.text
+            }}
             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
         >
             <Picker.Item label='Chọn nhóm' value='chonNhom' />

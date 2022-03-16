@@ -93,7 +93,8 @@ const Login = (props) => {
                 </TouchableOpacity>
                 <Text style={{
                     color: colors.inactive,
-                    fontSize: fontSizes.h6, width: '67%',
+                    fontSize: fontSizes.h6,
+                    width: '67%',
                     textAlign: 'center',
                     marginTop: 12
                 }}>Chúng tôi sẽ không đăng thông tin mà không có sự cho phép của bạn</Text>
@@ -131,6 +132,7 @@ const Login = (props) => {
                             setEmail(text)
                         }}
                         style={{
+                            color: 'black',
                             backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
@@ -140,6 +142,7 @@ const Login = (props) => {
                             borderTopLeftRadius: 10,
                             borderTopRightRadius: 10,
                         }}
+                        placeholderTextColor={colors.text}
                         placeholder='Email'
                         keyboardType='email-address'
                     />
@@ -151,6 +154,7 @@ const Login = (props) => {
                             setPassword(text)
                         }}
                         style={{
+                            color: 'black',
                             backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
@@ -160,6 +164,7 @@ const Login = (props) => {
                             borderBottomRightRadius: 10,
                         }}
                         placeholder='Mật khẩu'
+                        placeholderTextColor={colors.inactive}
                         // keyboardType='password'
                         secureTextEntry={isSecureEntry}
                     />
@@ -175,6 +180,7 @@ const Login = (props) => {
                         <Icon
                             name={isSecureEntry ? 'eye' : 'eye-slash'}
                             size={18}
+                            color={colors.text}
                         />
                     </TouchableOpacity>
                 </View>

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Text, View, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
@@ -6,11 +6,35 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import DateTimePickerr from '../components/DateTimePickerr'
 import { isValInput } from '../../../utilies/Validations'
 import ItemPickerGroup from '../components/ItemPickerGroup'
+import {
+    auth,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseDatabase,
+    doc,
+    setDoc,
+    collection,
+    GoogleSignin,
+    GoogleAuthProvider,
+    signInWithCredential,
+    addDoc,
+    getDocs
+} from '../../../firebase/firebase'
 
 const AddWallet = (props) => {
 
     const { navigate, goBack } = props.navigation
     const [money, setMoney] = useState('')
+    const [adu, setAdu] = useState('')
+    const test3 = collection(firebaseDatabase, 'wallets')
+
+    useEffect(() => {
+        const getRa = async () => {
+            const data = await getDocs(test3)
+            setAdu(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        }
+        getRa()
+    }, [])
 
     return <KeyboardAvoidingView
         enabled
@@ -26,8 +50,17 @@ const AddWallet = (props) => {
             onPressLeftIcon={() => {
                 goBack()
             }}
-            onPressRightIcon={() => {
-                alert('phải')
+            onPressRightIcon={async () => {
+                // alert(`${auth.currentUser.uid}`)
+                // await addDoc(test3, {
+                //     userId: auth.currentUser.uid,
+                //     money: money
+                // }).then(() => {
+                //     console.log('OK')
+                // }).catch((error) => {
+                //     console.log(error)
+                // })
+
             }}
         />
         <ScrollView>
@@ -65,7 +98,7 @@ const AddWallet = (props) => {
                                     fontWeight: 'bold',
                                     fontSize: fontSizes.h5,
                                     color: colors.inactive
-                                }}>VND</Text>
+                                }}>VNSD</Text>
                         </View>
                     </View>
                     <View style={{
@@ -100,7 +133,10 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                                 borderRadius: 30,
                             }}>
-                            <Icon name={'sticky-note'} size={22}></Icon>
+                            <Icon
+                                colors={colors.text}
+                                name={'sticky-note'}
+                                size={22}></Icon>
                         </View>
                     </View>
                     <View style={{
@@ -114,7 +150,10 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                                 borderRadius: 30,
                             }}>
-                            <Icon name={'calendar-alt'} size={22}></Icon>
+                            <Icon
+                                colors={colors.text}
+                                name={'calendar-alt'}
+                                size={22}></Icon>
                         </View>
                     </View>
                     <View style={{
@@ -147,6 +186,7 @@ const AddWallet = (props) => {
                         justifyContent: 'center',
                     }}>
                         <Text style={{
+                            color: colors.text,
                             fontSize: fontSizes.h5,
                         }}>Số tiền</Text>
                         <TextInput
@@ -154,6 +194,7 @@ const AddWallet = (props) => {
                             onChangeText={(text) => {
                                 { isValInput(text) || text === '' ? setMoney(text) : '' }
                             }}
+                            placeholderTextColor={colors.text}
                             keyboardType='numeric'
                             placeholder='0'
                             style={{
@@ -191,6 +232,7 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                             }}>
                             <TextInput
+                                placeholderTextColor={colors.text}
                                 placeholder='Nhập ghi chú'
                                 maxLength={50}
                                 numberOfLines={1}
@@ -216,6 +258,7 @@ const AddWallet = (props) => {
                             <Icon style={{
                                 paddingEnd: 15,
                             }}
+                                color={colors.text}
                                 name='chevron-right'
                                 size={15} />
                         </TouchableOpacity>
@@ -229,12 +272,17 @@ const AddWallet = (props) => {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                             }}>
-                            <Text style={{
-                                fontSize: 16,
-                                color: 'black',
-                                fontWeight: 'bold',
-                                textAlign: 'center',
-                            }}>...</Text>
+
+                            {adu.map((aduu) => {
+                                return <View>
+                                    <Text style={{
+                                        fontSize: 16,
+                                        color: 'black',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                    }}>{aduu.money}</Text>
+                                </View>
+                            })}
                         </TouchableOpacity>
                     </View>
                 </View>

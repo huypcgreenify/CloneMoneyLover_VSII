@@ -136,6 +136,7 @@ const Register = (props) => {
                             setEmail(text)
                         }}
                         style={{
+                            color: 'black',
                             backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
@@ -146,6 +147,7 @@ const Register = (props) => {
                             borderTopRightRadius: 10,
                         }}
                         placeholder='Email'
+                        placeholderTextColor={colors.text}
                         keyboardType='email-address'
                     />
 
@@ -155,6 +157,7 @@ const Register = (props) => {
                             setPassword(text)
                         }}
                         style={{
+                            color: 'black',
                             backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
@@ -164,6 +167,7 @@ const Register = (props) => {
                             borderBottomRightRadius: 10,
                         }}
                         placeholder='Mật khẩu'
+                        placeholderTextColor={colors.text}
                         secureTextEntry={isSecureEntry}
                     />
                     <TouchableOpacity
@@ -178,6 +182,7 @@ const Register = (props) => {
                         <Icon
                             name={isSecureEntry ? 'eye' : 'eye-slash'}
                             size={18}
+                            color={colors.text}
                         />
                     </TouchableOpacity>
                 </View>
@@ -199,7 +204,6 @@ const Register = (props) => {
                                     let newUserRef = doc(collection(firebaseDatabase, 'users'))
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
-                                    alert('Đăng kí thành công, quay về đăng nhập')
                                     navigate('UITabView')
                                 }).catch((re) => {
                                     console.log(re)

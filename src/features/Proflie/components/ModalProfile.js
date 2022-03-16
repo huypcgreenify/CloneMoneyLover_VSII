@@ -64,6 +64,7 @@ const ModalProfile = (props) => {
                     setCurrentPassword(text)
                 }}
                 style={{
+                    color: 'black',
                     backgroundColor: colors.btnLR,
                     height: 40,
                     borderWidth: 0,
@@ -72,6 +73,7 @@ const ModalProfile = (props) => {
                     marginBottom: 15
                 }}
                 placeholder='Nhập mật khẩu cũ'
+                placeholderTextColor={colors.text}
                 // keyboardType='password'
                 secureTextEntry={isSecureEntry}
             />
@@ -82,6 +84,7 @@ const ModalProfile = (props) => {
                     setPasswordNew(text)
                 }}
                 style={{
+                    color: 'black',
                     backgroundColor: colors.btnLR,
                     height: 40,
                     borderWidth: 0,
@@ -89,6 +92,7 @@ const ModalProfile = (props) => {
                     borderRadius: 10,
                     marginBottom: 10
                 }}
+                placeholderTextColor={colors.text}
                 placeholder='Nhập mật khẩu mới'
                 // keyboardType='password'
                 secureTextEntry={isSecureEntry}
@@ -99,14 +103,18 @@ const ModalProfile = (props) => {
                 }}
                 style={{
                     marginLeft: 5,
-                    flexDirection: 'row', 
+                    flexDirection: 'row',
                     marginBottom: 15
                 }}>
                 <Icon
                     name={isSecureEntry ? 'eye' : 'eye-slash'}
                     size={18}
+                    color={colors.text}
                 />
-                <Text style={{ marginLeft: 10 }}>Hiển thị mật khẩu</Text>
+                <Text style={{
+                    marginLeft: 10,
+                    color: colors.text,
+                }}>Hiển thị mật khẩu</Text>
             </TouchableOpacity>
             {passwordNew.length > 0 || currentPassword.length > 0 ? (errorPassword ?
                 <Text style={{
