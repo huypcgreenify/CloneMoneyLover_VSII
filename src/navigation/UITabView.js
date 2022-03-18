@@ -8,7 +8,7 @@
  */
 import React from 'react';
 import { Image } from "react-native"
-import { TransactionBook} from '../features'
+import { TransactionBook, AddWallet, Profile } from '../features'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { images, icons, colors, fontSizes } from '../constants';
 
@@ -24,20 +24,20 @@ const screenOptions = ({ route }) => ({
     tabBarInactiveTintColor: colors.inactive,
     tabBarActiveBackgroundColor: 'white',
     tabBarInactiveBackgroundColor: 'white',
-    // tabBarIcon: ({ focused, coler, size }) => {// 3 thuộc tính chuẩn của đối tượng( focused là có bấm vào icon không, true à bấm vào)
-    //     return <Image
-    //         style={{
-    //             width: route.name == 'AddWallet' ? 55 : 25,
-    //             height: route.name == 'AddWallet' ? 55 : 25,
-    //             marginBottom: route.name == 'AddWallet' ? 10 : undefined,
-    //             tintColor: route.name == 'AddWallet' ? undefined :
-    //                 (focused ? 'black' : colors.inactive)
-    //         }}
-    //         source={route.name == 'TransactionBook' ? images.walleticon :
-    //             (route.name == 'AddWallet' ? images.plus :
-    //                 (route.name == 'Profile' ? images.profileicon : ''))
-    //         } />
-    // },
+    tabBarIcon: ({ focused, coler, size }) => {// 3 thuộc tính chuẩn của đối tượng( focused là có bấm vào icon không, true à bấm vào)
+        return <Image
+            style={{
+                width: route.name == 'AddWallet' ? 55 : 25,
+                height: route.name == 'AddWallet' ? 55 : 25,
+                marginBottom: route.name == 'AddWallet' ? 10 : undefined,
+                tintColor: route.name == 'AddWallet' ? undefined :
+                    (focused ? 'black' : colors.inactive)
+            }}
+            source={route.name == 'TransactionBook' ? images.walleticon :
+                (route.name == 'AddWallet' ? images.plus :
+                    (route.name == 'Profile' ? images.profileicon : ''))
+            } />
+    },
 })
 
 const UITabView = (props) => {
@@ -49,7 +49,7 @@ const UITabView = (props) => {
             options={{
                 tabBarLabel: 'Sổ giao dịch',
             }}></Tab.Screen>
-        {/* <Tab.Screen
+        <Tab.Screen
             name={'AddWallet'}
             component={AddWallet}
             options={{
@@ -61,7 +61,7 @@ const UITabView = (props) => {
             component={Profile}
             options={
                 { tabBarLabel: 'Tài khoản' }
-            }></Tab.Screen> */}
+            }></Tab.Screen>
     </Tab.Navigator>
 
 
