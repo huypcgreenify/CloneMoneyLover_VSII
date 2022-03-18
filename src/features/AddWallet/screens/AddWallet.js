@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Text, View, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
@@ -6,11 +6,42 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import DateTimePickerr from '../components/DateTimePickerr'
 import { isValInput } from '../../../utilies/Validations'
 import ItemPickerGroup from '../components/ItemPickerGroup'
+import {
+    auth,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseDatabase,
+    doc,
+    setDoc,
+    collection,
+    GoogleSignin,
+    GoogleAuthProvider,
+    signInWithCredential,
+    addDoc,
+    getDocs,
+    getDoc,
+    query
+} from '../../../firebase/firebase'
 
 const AddWallet = (props) => {
 
     const { navigate, goBack } = props.navigation
     const [money, setMoney] = useState('')
+    const [adu, setAdu] = useState([])
+    const test3 = collection(firebaseDatabase, 'wallets')
+
+    // useEffect(() => {
+    //     const getRa = async () => {
+    //         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+    //         const querySnapshot = await getDocs(q)
+    //         setAdu(querySnapshot.docs.map((details) => ({
+    //             ...details.data(),
+    //             id: details.id
+    //         }))) // Lấy ra toàn bộ wallets
+    //         // console.log(queryData)
+    //     }
+    //     getRa()
+    // }, [adu])
 
     return <KeyboardAvoidingView
         enabled
@@ -26,8 +57,45 @@ const AddWallet = (props) => {
             onPressLeftIcon={() => {
                 goBack()
             }}
-            onPressRightIcon={() => {
-                alert('phải')
+            onPressRightIcon={async () => {
+                // alert(`${auth.currentUser.uid}`)
+                // await addDoc(test3, {
+                //     userId: auth.currentUser.uid,
+                //     money: money
+                // }).then(() => {
+                //     console.log('OK')
+                // }).catch((error) => {
+                //     console.log(error)
+                // })
+
+                // const myDoc = await getDocs(collection(firebaseDatabase, 'users/wallets'))
+                // console.log(myDoc.docs[0].data()); // "doc1"
+                // getDoc(myDoc).then((snapshot) => {
+                //     if (snapshot.exists) {
+                //         setAdu(snapshot.data())
+                //     } else {
+                //         alert('No snapshot found')
+                //     }
+                // }).catch((error) => {
+                //     console.log(error)
+                // })
+
+                const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+                await setDoc(colRef, {
+                    money: money,
+                }).then(() => {
+                    console.log('OK')
+                }).catch((error) => {
+                    console.log(error)
+                })
+                console.log(colRef.id)
+
+
+
+                // await setDoc(doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets')), {
+                //     money: money,
+                // })
+
             }}
         />
         <ScrollView>
@@ -100,7 +168,10 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                                 borderRadius: 30,
                             }}>
-                            <Icon name={'sticky-note'} size={22}></Icon>
+                            <Icon
+                                colors={colors.text}
+                                name={'sticky-note'}
+                                size={22}></Icon>
                         </View>
                     </View>
                     <View style={{
@@ -114,7 +185,10 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                                 borderRadius: 30,
                             }}>
-                            <Icon name={'calendar-alt'} size={22}></Icon>
+                            <Icon
+                                colors={colors.text}
+                                name={'calendar-alt'}
+                                size={22}></Icon>
                         </View>
                     </View>
                     <View style={{
@@ -147,6 +221,7 @@ const AddWallet = (props) => {
                         justifyContent: 'center',
                     }}>
                         <Text style={{
+                            color: colors.text,
                             fontSize: fontSizes.h5,
                         }}>Số tiền</Text>
                         <TextInput
@@ -154,6 +229,7 @@ const AddWallet = (props) => {
                             onChangeText={(text) => {
                                 { isValInput(text) || text === '' ? setMoney(text) : '' }
                             }}
+                            placeholderTextColor={colors.text}
                             keyboardType='numeric'
                             placeholder='0'
                             style={{
@@ -191,6 +267,7 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                             }}>
                             <TextInput
+                                placeholderTextColor={colors.text}
                                 placeholder='Nhập ghi chú'
                                 maxLength={50}
                                 numberOfLines={1}
@@ -216,6 +293,7 @@ const AddWallet = (props) => {
                             <Icon style={{
                                 paddingEnd: 15,
                             }}
+                                color={colors.text}
                                 name='chevron-right'
                                 size={15} />
                         </TouchableOpacity>
@@ -226,15 +304,28 @@ const AddWallet = (props) => {
                     }}>
                         <TouchableOpacity
                             style={{
-                                flexDirection: 'row',
+                                flexDirection: 'column',
                                 alignItems: 'center',
                             }}>
-                            <Text style={{
-                                fontSize: 16,
-                                color: 'black',
-                                fontWeight: 'bold',
-                                textAlign: 'center',
-                            }}>...</Text>
+                            {/* {adu != null &&
+                                <Text style={{
+                                    fontSize: 16,
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                }}>{adu.money}</Text>
+                            } */}
+                            {adu.map((gigi) => {
+                                return <View style={{
+                                    flexDirection: 'column'
+                                }}><Text style={{
+                                    fontSize: 16,
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                }}>{gigi.money}</Text>
+                                </View>
+                            })}
                         </TouchableOpacity>
                     </View>
                 </View>

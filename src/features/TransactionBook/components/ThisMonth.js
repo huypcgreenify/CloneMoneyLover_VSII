@@ -30,6 +30,7 @@ const ThisMonth = (props) => {
                 justifyContent: 'space-between',
             }}>
                 <Text style={{
+                    color: colors.text,
                     fontSize: fontSizes.h5
                 }}>Số dư đầu</Text>
                 <Text style={{
@@ -38,11 +39,13 @@ const ThisMonth = (props) => {
                 }}>0.00 ₫</Text>
             </View>
             <View style={{
+                color: colors.text,
                 marginTop: 5,
                 flexDirection: 'row',
                 justifyContent: 'space-between'
             }}>
                 <Text style={{
+                    color: colors.text,
                     fontSize: fontSizes.h5
                 }}>Số dư cuối</Text>
                 <Text style={{

@@ -79,11 +79,12 @@ const Register = (props) => {
                         borderWidth: 1,
                         padding: 5,
                         borderColor: 'red',
-                        width: '67%',
+                        width: '80%',
                         justifyContent: 'flex-start',
                         alignItems: 'center',
                         borderRadius: 5,
                         marginTop: 20,
+                        height: 40
                     }}>
                     <Icon style={{
                         paddingStart: 2
@@ -99,7 +100,8 @@ const Register = (props) => {
                 </TouchableOpacity>
                 <Text style={{
                     color: colors.inactive,
-                    fontSize: fontSizes.h6, width: '67%',
+                    fontSize: fontSizes.h6,
+                    width: '70%',
                     textAlign: 'center',
                     marginTop: 12
                 }}>Chúng tôi sẽ không đăng thông tin mà không có sự cho phép của bạn</Text>
@@ -127,7 +129,7 @@ const Register = (props) => {
                     }}></View>
                 </View>
                 <View style={{
-                    width: '72%',
+                    width: '85%',
                     marginTop: 14
                 }}>
                     <TextInput
@@ -136,6 +138,7 @@ const Register = (props) => {
                             setEmail(text)
                         }}
                         style={{
+                            color: 'black',
                             backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
@@ -146,6 +149,7 @@ const Register = (props) => {
                             borderTopRightRadius: 10,
                         }}
                         placeholder='Email'
+                        placeholderTextColor={colors.text}
                         keyboardType='email-address'
                     />
 
@@ -155,6 +159,7 @@ const Register = (props) => {
                             setPassword(text)
                         }}
                         style={{
+                            color: 'black',
                             backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
@@ -164,6 +169,7 @@ const Register = (props) => {
                             borderBottomRightRadius: 10,
                         }}
                         placeholder='Mật khẩu'
+                        placeholderTextColor={colors.text}
                         secureTextEntry={isSecureEntry}
                     />
                     <TouchableOpacity
@@ -178,6 +184,7 @@ const Register = (props) => {
                         <Icon
                             name={isSecureEntry ? 'eye' : 'eye-slash'}
                             size={18}
+                            color={colors.text}
                         />
                     </TouchableOpacity>
                 </View>
@@ -189,17 +196,17 @@ const Register = (props) => {
                     : <View></View>) : <View></View>
                 }
                 <View style={{
-                    width: '65%',
+                    marginTop: 10,
+                    width: '78%',
                 }}>
                     <TouchableOpacity
                         disabled={!isValidtionOk() == true}
                         onPress={() => {
                             createUserWithEmailAndPassword(auth, email, password)
                                 .then(async (re) => {
-                                    let newUserRef = doc(collection(firebaseDatabase, 'users'))
+                                    let newUserRef = doc(firebaseDatabase, 'users', email)
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
-                                    alert('Đăng kí thành công, quay về đăng nhập')
                                     navigate('UITabView')
                                 }).catch((re) => {
                                     console.log(re)
@@ -222,7 +229,10 @@ const Register = (props) => {
                         onPress={() => {
                             navigate('Login')
                         }}
-                        style={{ padding: 5 }}>
+                        style={{
+                            marginTop: 5,
+                            padding: 5
+                        }}>
                         <Text style={{
                             padding: 8,
                             fontSize: fontSizes.h5,
