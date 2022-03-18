@@ -18,23 +18,30 @@ import {
     GoogleAuthProvider,
     signInWithCredential,
     addDoc,
-    getDocs
+    getDocs,
+    getDoc,
+    query
 } from '../../../firebase/firebase'
 
 const AddWallet = (props) => {
 
     const { navigate, goBack } = props.navigation
     const [money, setMoney] = useState('')
-    const [adu, setAdu] = useState('')
+    const [adu, setAdu] = useState([])
     const test3 = collection(firebaseDatabase, 'wallets')
 
-    useEffect(() => {
-        const getRa = async () => {
-            const data = await getDocs(test3)
-            setAdu(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-        }
-        getRa()
-    }, [])
+    // useEffect(() => {
+    //     const getRa = async () => {
+    //         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+    //         const querySnapshot = await getDocs(q)
+    //         setAdu(querySnapshot.docs.map((details) => ({
+    //             ...details.data(),
+    //             id: details.id
+    //         }))) // Lấy ra toàn bộ wallets
+    //         // console.log(queryData)
+    //     }
+    //     getRa()
+    // }, [adu])
 
     return <KeyboardAvoidingView
         enabled
@@ -59,6 +66,34 @@ const AddWallet = (props) => {
                 //     console.log('OK')
                 // }).catch((error) => {
                 //     console.log(error)
+                // })
+
+                // const myDoc = await getDocs(collection(firebaseDatabase, 'users/wallets'))
+                // console.log(myDoc.docs[0].data()); // "doc1"
+                // getDoc(myDoc).then((snapshot) => {
+                //     if (snapshot.exists) {
+                //         setAdu(snapshot.data())
+                //     } else {
+                //         alert('No snapshot found')
+                //     }
+                // }).catch((error) => {
+                //     console.log(error)
+                // })
+
+                const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+                await setDoc(colRef, {
+                    money: money,
+                }).then(() => {
+                    console.log('OK')
+                }).catch((error) => {
+                    console.log(error)
+                })
+                console.log(colRef.id)
+
+
+
+                // await setDoc(doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets')), {
+                //     money: money,
                 // })
 
             }}
@@ -98,7 +133,7 @@ const AddWallet = (props) => {
                                     fontWeight: 'bold',
                                     fontSize: fontSizes.h5,
                                     color: colors.inactive
-                                }}>VNSD</Text>
+                                }}>VND</Text>
                         </View>
                     </View>
                     <View style={{
@@ -269,18 +304,26 @@ const AddWallet = (props) => {
                     }}>
                         <TouchableOpacity
                             style={{
-                                flexDirection: 'row',
+                                flexDirection: 'column',
                                 alignItems: 'center',
                             }}>
-
-                            {adu.map((aduu) => {
-                                return <View>
-                                    <Text style={{
-                                        fontSize: 16,
-                                        color: 'black',
-                                        fontWeight: 'bold',
-                                        textAlign: 'center',
-                                    }}>{aduu.money}</Text>
+                            {/* {adu != null &&
+                                <Text style={{
+                                    fontSize: 16,
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                }}>{adu.money}</Text>
+                            } */}
+                            {adu.map((gigi) => {
+                                return <View style={{
+                                    flexDirection: 'column'
+                                }}><Text style={{
+                                    fontSize: 16,
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                }}>{gigi.money}</Text>
                                 </View>
                             })}
                         </TouchableOpacity>

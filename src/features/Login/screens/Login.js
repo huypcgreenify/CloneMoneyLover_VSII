@@ -73,11 +73,12 @@ const Login = (props) => {
                         borderWidth: 1,
                         padding: 5,
                         borderColor: 'red',
-                        width: '67%',
+                        width: '80%',
                         justifyContent: 'flex-start',
                         alignItems: 'center',
                         borderRadius: 5,
                         marginTop: 20,
+                        height: 40
                     }}>
                     <Icon style={{
                         paddingStart: 2
@@ -94,7 +95,7 @@ const Login = (props) => {
                 <Text style={{
                     color: colors.inactive,
                     fontSize: fontSizes.h6,
-                    width: '67%',
+                    width: '70%',
                     textAlign: 'center',
                     marginTop: 12
                 }}>Chúng tôi sẽ không đăng thông tin mà không có sự cho phép của bạn</Text>
@@ -122,7 +123,7 @@ const Login = (props) => {
                     }}></View>
                 </View>
                 <View style={{
-                    width: '72%',
+                    width: '85%',
                     marginTop: 14
                 }}>
                     <TextInput
@@ -192,7 +193,8 @@ const Login = (props) => {
                     : <View></View>) : <View></View>
                 }
                 <View style={{
-                    width: '65%',
+                    marginTop: 10,
+                    width: '78%',
                 }}>
                     <TouchableOpacity
                         disabled={!isValidtionOk() == true}
@@ -222,6 +224,7 @@ const Login = (props) => {
                         }}>ĐĂNG NHẬP</Text>
                     </TouchableOpacity>
                     <View style={{
+                        marginTop: 5,
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>

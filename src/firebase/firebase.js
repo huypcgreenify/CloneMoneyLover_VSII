@@ -19,6 +19,10 @@ import {
     doc,
     setDoc,
     addDoc,
+    getDoc,
+    refEqual,
+    query,
+
 } from 'firebase/firestore/lite'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
@@ -57,5 +61,7 @@ export {
     reauthenticateWithCredential,
     GoogleAuthProvider,
     signInWithCredential,
-    addDoc
+    addDoc,
+    getDoc,
+    query
 }

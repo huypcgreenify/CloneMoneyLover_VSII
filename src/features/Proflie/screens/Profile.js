@@ -16,7 +16,7 @@ import {
 import ModalProfile from "../components/ModalProfile"
 
 const Profile = (props) => {
-
+console.log('1')
     const { navigate, goBack } = props.navigation
     const [isModalVisible, setModalVisible] = useState(false)
     const toggleModal = () => {
