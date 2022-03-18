@@ -1,22 +1,18 @@
 import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, TextInput } from "react-native"
+import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, TextInput, Keyboard } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
 import {
     auth,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
-    firebaseDatabase,
-    doc,
-    setDoc,
-    collection,
+    signInWithEmailAndPassword,
     GoogleSignin,
     GoogleAuthProvider,
     signInWithCredential
 } from '../../../firebase/firebase'
 
-const Register = (props) => {
+
+const Login = (props) => {
 
     const { width } = useWindowDimensions()
     //Email&Pass - Validate...
@@ -24,31 +20,27 @@ const Register = (props) => {
     const [errorPassword, setErrorPassword] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [isSecureEntry, setIsSecureEntry] = useState(true)
     const isValidtionOk = () => email.length > 0
         && password.length > 0
         && isValidEmail(email) == true
         && isValidPassword(password) == true
+    const [isSecureEntry, setIsSecureEntry] = useState(true)
     //function of navigation to/back
     const { navigate, goBack } = props.navigation
 
     const signInWithGoogleAsync = async () => {
-        try {
-            const { idToken } = await GoogleSignin.signIn();
-            console.log('id: ' + idToken)
-            const googleCredential = GoogleAuthProvider.credential(idToken)
-            console.log('id: ' + googleCredential)
-            const user_sign_in = signInWithCredential(auth, googleCredential)
-            console.log(user_sign_in)
-            user_sign_in.then((users) => {
-                navigate('UITabView')
-                console.log(users)
-            }).catch((error) => {
-                console.log(error)
-            })
-        } catch (error) {
+        const { idToken } = await GoogleSignin.signIn();
+        console.log('id: ' + idToken)
+        const googleCredential = GoogleAuthProvider.credential(idToken)
+        console.log('id: ' + googleCredential)
+        const user_sign_in = signInWithCredential(auth, googleCredential)
+        console.log(user_sign_in)
+        user_sign_in.then((users) => {
+            navigate('UITabView')
+            console.log(users)
+        }).catch((error) => {
             console.log(error)
-        }
+        })
     }
 
     return <View style={{
@@ -56,13 +48,13 @@ const Register = (props) => {
         flex: 1,
     }}>
         <ScrollView>
-            <TouchableOpacity style={{
-                padding: 15
-            }}
+            <TouchableOpacity
                 onPress={() => {
-                    goBack();
+                    goBack()
                 }}
-            ><Icon name={'arrow-left'} size={18} color={'black'} />
+                style={{
+                    padding: 15
+                }}><Icon name={'arrow-left'} size={18} color={'black'} />
             </TouchableOpacity>
             <View style={{
                 justifyContent: 'center',
@@ -71,9 +63,11 @@ const Register = (props) => {
                 <Text style={{
                     fontSize: fontSizes.h1,
                     color: 'black'
-                }}>Đăng ký</Text>
+                }}>Đăng nhập</Text>
                 <TouchableOpacity
-                    onPress={signInWithGoogleAsync}
+                    onPress={() => {
+                        signInWithGoogleAsync()
+                    }}
                     style={{
                         flexDirection: 'row',
                         borderWidth: 1,
@@ -133,6 +127,7 @@ const Register = (props) => {
                     marginTop: 14
                 }}>
                     <TextInput
+                        value={email}
                         onChangeText={(text) => {
                             setErrorEmail(isValidEmail(text) == true ? '' : 'Email không đúng định dạng')
                             setEmail(text)
@@ -148,12 +143,13 @@ const Register = (props) => {
                             borderTopLeftRadius: 10,
                             borderTopRightRadius: 10,
                         }}
-                        placeholder='Email'
                         placeholderTextColor={colors.text}
+                        placeholder='Email'
                         keyboardType='email-address'
                     />
 
                     <TextInput
+                        value={password}
                         onChangeText={(text) => {
                             setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 6 kí tự')
                             setPassword(text)
@@ -169,7 +165,8 @@ const Register = (props) => {
                             borderBottomRightRadius: 10,
                         }}
                         placeholder='Mật khẩu'
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={colors.inactive}
+                        // keyboardType='password'
                         secureTextEntry={isSecureEntry}
                     />
                     <TouchableOpacity
@@ -202,14 +199,15 @@ const Register = (props) => {
                     <TouchableOpacity
                         disabled={!isValidtionOk() == true}
                         onPress={() => {
-                            createUserWithEmailAndPassword(auth, email, password)
-                                .then(async (re) => {
-                                    let newUserRef = doc(firebaseDatabase, 'users', email)
-                                    await setDoc(newUserRef, { email })
+                            signInWithEmailAndPassword(auth, email, password)
+                                .then((re) => {
+                                    // debugger
                                     console.log(re)
                                     navigate('UITabView')
-                                }).catch((re) => {
-                                    console.log(re)
+                                    // debugger
+                                }).catch((error) => {
+                                    console.log(error)
+                                    alert(`Cannot sign in, error: ${error.message}`)
                                 })
                         }}
                         style={{
@@ -223,27 +221,40 @@ const Register = (props) => {
                             padding: 8,
                             fontSize: fontSizes.h5,
                             color: 'white'
-                        }}>ĐĂNG KÝ</Text>
+                        }}>ĐĂNG NHẬP</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigate('Login')
-                        }}
-                        style={{
-                            marginTop: 5,
-                            padding: 5
-                        }}>
-                        <Text style={{
-                            padding: 8,
-                            fontSize: fontSizes.h5,
-                            color: colors.primary,
-                            alignSelf: 'center'
-                        }}>Đăng nhập</Text>
-                    </TouchableOpacity>
+                    <View style={{
+                        marginTop: 5,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigate('Register')
+                            }}
+                            style={{ padding: 5 }}>
+                            <Text style={{
+                                paddingVertical: 10,
+                                fontSize: fontSizes.h5,
+                                color: colors.primary,
+                            }}>Đăng ký</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+
+                            }}
+                            style={{ padding: 5 }}>
+                            <Text style={{
+                                paddingVertical: 10,
+                                fontSize: fontSizes.h5,
+                                color: colors.primary,
+                            }}>Quên mật khẩu?</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </ScrollView >
-    </View >
+        </ScrollView>
+    </View>
 }
 
-export default Register
+export default Login
