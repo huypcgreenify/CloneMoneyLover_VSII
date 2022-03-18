@@ -9,4 +9,5 @@ export default {
     plus: require('../assets/plus.png'),
     profileicon: require('../assets/profileicon.png'),
     walleticon: require('../assets/walleticon.png'),
+    userImage: require('../assets/userImage.png'),
 }

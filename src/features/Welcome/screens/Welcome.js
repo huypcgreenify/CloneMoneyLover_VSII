@@ -1,10 +1,19 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Text, View, Image, TouchableOpacity, FlatList, Animated, useWindowDimensions } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import { UIButton } from '../../../components'
 import slide from '../components/slide'
 import ItemWelcome from '../components/ItemWelcome'
 import Paginator from '../components/Paginator'
+import {
+    auth,
+    onAuthStateChanged,
+    firebaseDatabase,
+    doc,
+    setDoc,
+    collection
+} from '../../../firebase/firebase'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Welcome = (props) => {
 
@@ -38,6 +47,20 @@ const Welcome = (props) => {
             navigated: 'Login'
         },
     ])
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (responseUser) => {
+            if (responseUser) {
+                let user = {
+                    userId: responseUser.uid,
+                    email: responseUser.email,
+                }
+                // lưu user ddến lưu trữ local: yarn add @react-native-async-storage/async-storage
+                AsyncStorage.setItem('users', JSON.stringify(user))
+                navigate('UITabView')
+            }
+        })
+    },[])
 
     return <View style={{
         flex: 1,
