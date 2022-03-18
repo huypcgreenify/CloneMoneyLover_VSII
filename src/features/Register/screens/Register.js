@@ -29,6 +29,8 @@ const Register = (props) => {
         && password.length > 0
         && isValidEmail(email) == true
         && isValidPassword(password) == true
+    const [focusEmail, setFocusEmail] = useState(false)
+    const [focusPassword, setFocusPassword] = useState(false)
     //function of navigation to/back
     const { navigate, goBack } = props.navigation
 
@@ -137,19 +139,23 @@ const Register = (props) => {
                             setErrorEmail(isValidEmail(text) == true ? '' : 'Email không đúng định dạng')
                             setEmail(text)
                         }}
+                        onFocus={() => {
+                            setFocusEmail(true)
+                        }}
+                        onBlur={() => {
+                            setFocusEmail(false)
+                        }}
                         style={{
                             color: 'black',
-                            backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
                             borderWidth: 0,
                             padding: 10,
-                            marginBottom: -13,
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10,
+                            borderBottomWidth: 2,
+                            borderColor: focusEmail ? colors.primary : colors.text
                         }}
                         placeholder='Email'
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={focusEmail ? colors.primary : colors.text}
                         keyboardType='email-address'
                     />
 
@@ -158,18 +164,23 @@ const Register = (props) => {
                             setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 6 kí tự')
                             setPassword(text)
                         }}
+                        onFocus={() => {
+                            setFocusPassword(true)
+                        }}
+                        onBlur={() => {
+                            setFocusPassword(false)
+                        }}
                         style={{
                             color: 'black',
-                            backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
                             borderWidth: 0,
                             padding: 10,
-                            borderBottomLeftRadius: 10,
-                            borderBottomRightRadius: 10,
+                            borderBottomWidth: 2,
+                            borderColor: focusPassword ? colors.primary : colors.text
                         }}
                         placeholder='Mật khẩu'
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={focusPassword ? colors.primary : colors.text}
                         secureTextEntry={isSecureEntry}
                     />
                     <TouchableOpacity
@@ -196,7 +207,7 @@ const Register = (props) => {
                     : <View></View>) : <View></View>
                 }
                 <View style={{
-                    marginTop: 10,
+                    marginTop: 15,
                     width: '78%',
                 }}>
                     <TouchableOpacity

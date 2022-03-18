@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Text, View, Image, TouchableOpacity, useWindowDimensions } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 
-const ItemWelcom = ({ item }) => {
+const ItemWelcome = ({ item }) => {
 
     const { width, height } = useWindowDimensions()
 
@@ -104,4 +104,4 @@ const ItemWelcom = ({ item }) => {
     )
 }
 
-export default ItemWelcom
+export default ItemWelcome
