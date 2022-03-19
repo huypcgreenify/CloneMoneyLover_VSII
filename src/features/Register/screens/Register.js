@@ -54,7 +54,7 @@ const Register = (props) => {
             user_sign_in.then(async (users) => {
                 let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
                 await setDoc(newUserRef, { email })
-                    navigate('AddWalletTransaction')
+                navigate('UITabView')
                 console.log(users)
             }).catch((error) => {
                 console.log(error)
@@ -229,10 +229,9 @@ const Register = (props) => {
                                     let newUserRef = doc(firebaseDatabase, 'users', email)
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
-                                    navigate('AddWalletTransaction')
+                                    navigate('UITabView')
                                 }).catch((re) => {
                                     console.log(re)
-                                    alert("Tài khoản đã tồn tại!")
                                 })
                         }}
                         style={{

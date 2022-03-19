@@ -12,15 +12,8 @@ import {
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import UITabTopTransactionBook from '../navigations/UITabTopTransactionBook'
-import {
-    auth,
-    onAuthStateChanged,
-} from '../../../firebase/firebase'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const TransactionBook = (props) => {
-
-    const { navigate, goBack } = props.navigation
 
     const backAction = () => {
         if (props.navigation.isFocused()) {
@@ -56,7 +49,7 @@ const TransactionBook = (props) => {
         }}>
             <TouchableOpacity
                 onPress={() => {
-                 navigate('AddWalletTransaction')
+                    alert('ok')
                 }}
                 style={{
                     flexDirection: 'row',
