@@ -11,8 +11,8 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native'
 import { Welcome, Login, Register, } from '../features'
 import EditTransactionBook from '../features/TransactionBook/navigations/EditTransactionBook'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import AddWalletTransaction from '../features/AddWallet/screens/AddWalletTransaction'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UITabView from './UITabView'
 
 const Stack = createNativeStackNavigator()

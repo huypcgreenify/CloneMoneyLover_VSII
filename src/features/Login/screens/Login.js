@@ -38,7 +38,7 @@ const Login = (props) => {
         const user_sign_in = signInWithCredential(auth, googleCredential)
         console.log(user_sign_in)
         user_sign_in.then((users) => {
-            navigate('AddWalletTransaction')
+            navigate('UITabView')
             console.log(users)
         }).catch((error) => {
             console.log(error)
