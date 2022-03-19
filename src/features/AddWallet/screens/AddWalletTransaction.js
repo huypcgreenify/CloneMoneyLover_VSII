@@ -61,7 +61,6 @@ const AddWalletTransaction = (props) => {
             <TextInput
                 value={nameWallet}
                 onChangeText={(text) => {
-                    // setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 6 kí tự')
                     setNameWallet(text)
                 }}
                 onFocus={() => {

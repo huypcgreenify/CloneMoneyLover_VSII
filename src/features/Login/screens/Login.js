@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, TextInput, Keyboard } from "react-native"
+import { Text, View, TouchableOpacity, ScrollView, useWindowDimensions, TextInput, Keyboard } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
