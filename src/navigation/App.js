@@ -9,7 +9,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native'
-import { Welcome, Login, Register } from '../features'
+import { Welcome, Login, Register, } from '../features'
+import EditTransactionBook from '../features/TransactionBook/navigations/EditTransactionBook'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UITabView from './UITabView'
 
@@ -22,6 +23,7 @@ const App = (props) => {
             <Stack.Screen name={'Login'} component={Login}></Stack.Screen>
             <Stack.Screen name={'Register'} component={Register}></Stack.Screen>
             <Stack.Screen name={'UITabView'} component={UITabView}></Stack.Screen>
+            <Stack.Screen name={'EditTransactionBook'} component={EditTransactionBook}></Stack.Screen>
         </Stack.Navigator>
     </NavigationContainer >
 }

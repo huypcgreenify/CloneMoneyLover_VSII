@@ -1,5 +1,14 @@
 import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, TextInput } from "react-native"
+import {
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+    useWindowDimensions,
+    TextInput,
+    BackHandler
+} from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
@@ -42,7 +51,9 @@ const Register = (props) => {
             console.log('id: ' + googleCredential)
             const user_sign_in = signInWithCredential(auth, googleCredential)
             console.log(user_sign_in)
-            user_sign_in.then((users) => {
+            user_sign_in.then(async (users) => {
+                let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
+                await setDoc(newUserRef, { email })
                 navigate('UITabView')
                 console.log(users)
             }).catch((error) => {
