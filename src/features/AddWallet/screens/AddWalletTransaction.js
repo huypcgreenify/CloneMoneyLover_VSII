@@ -144,7 +144,6 @@ const AddWalletTransaction = (props) => {
                 }}>Tạo ví</Text>
             </TouchableOpacity>
         </View>
-
     </ScrollView>
 }
 
