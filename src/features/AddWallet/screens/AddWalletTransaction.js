@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
     Text,
     View,
     Image,
     TouchableOpacity,
-    Dimensions,
-    useWindowDimensions,
     ScrollView,
     TextInput
 } from 'react-native'
@@ -63,7 +61,6 @@ const AddWalletTransaction = (props) => {
             <TextInput
                 value={nameWallet}
                 onChangeText={(text) => {
-                    // setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 6 kí tự')
                     setNameWallet(text)
                 }}
                 onFocus={() => {
@@ -144,7 +141,6 @@ const AddWalletTransaction = (props) => {
                 }}>Tạo ví</Text>
             </TouchableOpacity>
         </View>
-
     </ScrollView>
 }
 
