@@ -1,5 +1,19 @@
-import React, { useState, useEffect } from "react"
-import { Text, View, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from "react-native"
+import React, {
+    useState,
+    useEffect,
+    useCallback
+} from "react"
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    Image,
+    TextInput,
+    KeyboardAvoidingView,
+    ScrollView,
+    Alert,
+    BackHandler
+} from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'

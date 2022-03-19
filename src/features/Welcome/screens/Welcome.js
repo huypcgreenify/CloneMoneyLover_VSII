@@ -8,10 +8,6 @@ import Paginator from '../components/Paginator'
 import {
     auth,
     onAuthStateChanged,
-    firebaseDatabase,
-    doc,
-    setDoc,
-    collection
 } from '../../../firebase/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -60,7 +56,7 @@ const Welcome = (props) => {
                 navigate('UITabView')
             }
         })
-    },[])
+    }, [])
 
     return <View style={{
         flex: 1,

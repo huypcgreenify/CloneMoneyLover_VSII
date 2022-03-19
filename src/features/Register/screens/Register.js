@@ -1,5 +1,14 @@
 import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, TextInput } from "react-native"
+import {
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+    useWindowDimensions,
+    TextInput,
+    BackHandler
+} from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
@@ -42,8 +51,12 @@ const Register = (props) => {
             console.log('id: ' + googleCredential)
             const user_sign_in = signInWithCredential(auth, googleCredential)
             console.log(user_sign_in)
-            user_sign_in.then((users) => {
-                navigate('UITabView')
+            user_sign_in.then(async (users) => {
+                let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
+                await setDoc(newUserRef, { email })
+             
+                    navigate('AddWalletTransaction')
+              
                 console.log(users)
             }).catch((error) => {
                 console.log(error)
@@ -218,9 +231,10 @@ const Register = (props) => {
                                     let newUserRef = doc(firebaseDatabase, 'users', email)
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
-                                    navigate('UITabView')
+                                    navigate('AddWalletTransaction')
                                 }).catch((re) => {
                                     console.log(re)
+                                    alert("Tài khoản đã tồn tại!")
                                 })
                         }}
                         style={{
