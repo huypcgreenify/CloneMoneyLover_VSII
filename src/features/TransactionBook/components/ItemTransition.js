@@ -11,6 +11,7 @@ const ItemTransition = (props) => {
     } = props
 
     return <View style={{
+        marginTop: 15,
         paddingHorizontal: 15,
         height: 125,
         backgroundColor: 'white',

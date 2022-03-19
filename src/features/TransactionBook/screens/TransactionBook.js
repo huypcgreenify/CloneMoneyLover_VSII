@@ -1,10 +1,50 @@
-import React from "react"
-import { Text, View, Image, TouchableOpacity, Dimensions, useWindowDimensions } from 'react-native'
+import React, { useEffect } from "react"
+import {
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    Dimensions,
+    useWindowDimensions,
+    Alert,
+    BackHandler
+} from 'react-native'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import UITabTopTransactionBook from '../navigations/UITabTopTransactionBook'
+import {
+    auth,
+    onAuthStateChanged,
+} from '../../../firebase/firebase'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const TransactionBook = (props) => {
+
+    const { navigate, goBack } = props.navigation
+
+    const backAction = () => {
+        if (props.navigation.isFocused()) {
+            Alert.alert('Chú ý!', 'Bạn muốn thoát app chứ?', [
+                {
+                    text: 'Không',
+                    onPress: () => null,
+                    style: 'cancel',
+                },
+                {
+                    text: 'Có',
+                    onPress: () => BackHandler.exitApp()
+                },
+            ])
+            return true
+        }
+    }
+
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', backAction)
+
+        return () =>
+            BackHandler.removeEventListener('hardwareBackPress', backAction)
+    }, [])
 
     return <View style={{
         flex: 1,
@@ -16,7 +56,7 @@ const TransactionBook = (props) => {
         }}>
             <TouchableOpacity
                 onPress={() => {
-                    alert('ok')
+                 navigate('AddWalletTransaction')
                 }}
                 style={{
                     flexDirection: 'row',
@@ -75,7 +115,7 @@ const TransactionBook = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
-                    alert('ok')
+                    alert('OKK')
                 }}
                 style={{
                     flexDirection: 'row',

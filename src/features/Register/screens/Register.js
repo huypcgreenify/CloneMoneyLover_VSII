@@ -1,5 +1,14 @@
 import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView, useWindowDimensions, TextInput } from "react-native"
+import {
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+    useWindowDimensions,
+    TextInput,
+    BackHandler
+} from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
@@ -29,6 +38,8 @@ const Register = (props) => {
         && password.length > 0
         && isValidEmail(email) == true
         && isValidPassword(password) == true
+    const [focusEmail, setFocusEmail] = useState(false)
+    const [focusPassword, setFocusPassword] = useState(false)
     //function of navigation to/back
     const { navigate, goBack } = props.navigation
 
@@ -40,8 +51,10 @@ const Register = (props) => {
             console.log('id: ' + googleCredential)
             const user_sign_in = signInWithCredential(auth, googleCredential)
             console.log(user_sign_in)
-            user_sign_in.then((users) => {
-                navigate('UITabView')
+            user_sign_in.then(async (users) => {
+                let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
+                await setDoc(newUserRef, { email })
+                    navigate('AddWalletTransaction')
                 console.log(users)
             }).catch((error) => {
                 console.log(error)
@@ -137,19 +150,23 @@ const Register = (props) => {
                             setErrorEmail(isValidEmail(text) == true ? '' : 'Email không đúng định dạng')
                             setEmail(text)
                         }}
+                        onFocus={() => {
+                            setFocusEmail(true)
+                        }}
+                        onBlur={() => {
+                            setFocusEmail(false)
+                        }}
                         style={{
                             color: 'black',
-                            backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
                             borderWidth: 0,
                             padding: 10,
-                            marginBottom: -13,
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10,
+                            borderBottomWidth: 2,
+                            borderColor: focusEmail ? colors.primary : colors.text
                         }}
                         placeholder='Email'
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={focusEmail ? colors.primary : colors.text}
                         keyboardType='email-address'
                     />
 
@@ -158,18 +175,23 @@ const Register = (props) => {
                             setErrorPassword(isValidPassword(text) == true ? '' : 'Mật khẩu phải trên 6 kí tự')
                             setPassword(text)
                         }}
+                        onFocus={() => {
+                            setFocusPassword(true)
+                        }}
+                        onBlur={() => {
+                            setFocusPassword(false)
+                        }}
                         style={{
                             color: 'black',
-                            backgroundColor: colors.btnLR,
                             height: 40,
                             margin: 12,
                             borderWidth: 0,
                             padding: 10,
-                            borderBottomLeftRadius: 10,
-                            borderBottomRightRadius: 10,
+                            borderBottomWidth: 2,
+                            borderColor: focusPassword ? colors.primary : colors.text
                         }}
                         placeholder='Mật khẩu'
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={focusPassword ? colors.primary : colors.text}
                         secureTextEntry={isSecureEntry}
                     />
                     <TouchableOpacity
@@ -196,7 +218,7 @@ const Register = (props) => {
                     : <View></View>) : <View></View>
                 }
                 <View style={{
-                    marginTop: 10,
+                    marginTop: 15,
                     width: '78%',
                 }}>
                     <TouchableOpacity
@@ -207,9 +229,10 @@ const Register = (props) => {
                                     let newUserRef = doc(firebaseDatabase, 'users', email)
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
-                                    navigate('UITabView')
+                                    navigate('AddWalletTransaction')
                                 }).catch((re) => {
                                     console.log(re)
+                                    alert("Tài khoản đã tồn tại!")
                                 })
                         }}
                         style={{
