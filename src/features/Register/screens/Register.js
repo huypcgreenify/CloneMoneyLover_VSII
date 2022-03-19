@@ -229,7 +229,7 @@ const Register = (props) => {
                                     let newUserRef = doc(firebaseDatabase, 'users', email)
                                     await setDoc(newUserRef, { email })
                                     console.log(re)
-                                    navigate('UITabView')
+                                    navigate('AddWalletTransaction')
                                 }).catch((re) => {
                                     console.log(re)
                                 })

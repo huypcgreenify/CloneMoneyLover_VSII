@@ -15,6 +15,8 @@ import UITabTopTransactionBook from '../navigations/UITabTopTransactionBook'
 
 const TransactionBook = (props) => {
 
+    const { navigate, goBack } = props.navigation
+
     const backAction = () => {
         if (props.navigation.isFocused()) {
             Alert.alert('Chú ý!', 'Bạn muốn thoát app chứ?', [
@@ -49,7 +51,7 @@ const TransactionBook = (props) => {
         }}>
             <TouchableOpacity
                 onPress={() => {
-                    alert('ok')
+                    navigate('AddWalletTransaction')
                 }}
                 style={{
                     flexDirection: 'row',
