@@ -5,8 +5,15 @@ import ItemTransition from './ItemTransition'
 import moment from 'moment'
 
 const ThisMonth = (props) => {
-
+    const { navigate, goBack } = props.navigation
+    console.log(props)
     const [transBook, setTransBook] = useState([
+        {
+            dayZoom: moment().format('DD'),
+            monthYear: moment().format('MM-YYYY'),
+            proceeds: 20000000000,
+            proceedsCurrent: 20000000000
+        },
         {
             dayZoom: moment().format('DD'),
             monthYear: moment().format('MM-YYYY'),
@@ -81,14 +88,19 @@ const ThisMonth = (props) => {
             data={transBook}
             keyExtractor={item => item.monthYear}
             style={{
-                marginTop: 25,
+                marginTop: 10,
                 flexDirection: 'column',
                 flex: 0.8,
             }}
             renderItem={({ item, index }) =>
-                <ItemTransition
-                    item={item}
-                    index={index} />
+                <TouchableOpacity
+                    onPress={() => {
+                        navigate('EditTransactionBook')
+                    }}>
+                    <ItemTransition
+                        item={item}
+                        index={index} />
+                </TouchableOpacity>
             }
         />
 
