@@ -36,14 +36,24 @@ import {
     getDoc,
     query
 } from '../../../firebase/firebase'
+import moment from 'moment'
 
 const AddWallet = (props) => {
 
+
     const { navigate, goBack } = props.navigation
     const [money, setMoney] = useState('')
+    const [selectedValueGroup, setSelectedValueGroup] = useState('')
+    const [descriptionAdd, setDescriptionAdd] = useState('')
+    const [text, setText] = useState(moment().format('DD-MM-YYYY'))
     const [adu, setAdu] = useState([])
     const test3 = collection(firebaseDatabase, 'wallets')
-
+    const guidGenerator = () => {
+        const S4 = () => {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        }
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+    }
     // useEffect(() => {
     //     const getRa = async () => {
     //         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
@@ -97,6 +107,10 @@ const AddWallet = (props) => {
                 const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
                 await setDoc(colRef, {
                     money: money,
+                    selectedValueGroup: selectedValueGroup,
+                    descriptionAdd: descriptionAdd,
+                    textTime: text,
+                    idWalletGD: guidGenerator(),
                 }).then(() => {
                     console.log('OK')
                 }).catch((error) => {
@@ -263,7 +277,7 @@ const AddWallet = (props) => {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}>
-                            <ItemPickerGroup />
+                            <ItemPickerGroup selectedValue={selectedValueGroup} setSelectedValue={setSelectedValueGroup} />
                             <Text style={{
                                 fontSize: 42
                             }}></Text>
@@ -282,6 +296,9 @@ const AddWallet = (props) => {
                             }}>
                             <TextInput
                                 placeholderTextColor={colors.text}
+                                onChangeText={(text) => {
+                                    setDescriptionAdd(text)
+                                }}
                                 placeholder='Nhập ghi chú'
                                 maxLength={50}
                                 numberOfLines={1}
@@ -303,7 +320,7 @@ const AddWallet = (props) => {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}>
-                            <DateTimePickerr />
+                            <DateTimePickerr text={text} setText={setText} />
                             <Icon style={{
                                 paddingEnd: 15,
                             }}

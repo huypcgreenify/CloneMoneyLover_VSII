@@ -46,16 +46,15 @@ const Register = (props) => {
     const signInWithGoogleAsync = async () => {
         try {
             const { idToken } = await GoogleSignin.signIn();
-            console.log('id: ' + idToken)
+            // console.log('id: ' + idToken)
             const googleCredential = GoogleAuthProvider.credential(idToken)
-            console.log('id: ' + googleCredential)
+            // console.log('id: ' + googleCredential)
             const user_sign_in = signInWithCredential(auth, googleCredential)
-            console.log(user_sign_in)
+            // console.log(user_sign_in)
             user_sign_in.then(async (users) => {
                 let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
                 await setDoc(newUserRef, { email })
                 navigate('UITabView')
-                console.log(users)
             }).catch((error) => {
                 console.log(error)
             })

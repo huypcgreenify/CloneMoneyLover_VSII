@@ -10,8 +10,8 @@ const DateTimePickerr = (props) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date')
     const [show, setShow] = useState(false)
-    const [text, setText] = useState(moment().format('DD-MM-YYYY'))
-
+    // const [text, setText] = useState(moment().format('DD-MM-YYYY'))
+    const { text, setText } = props
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');

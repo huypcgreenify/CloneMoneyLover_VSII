@@ -24,7 +24,9 @@ import {
     query,
 
 } from 'firebase/firestore/lite'
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+    GoogleSignin,
+} from '@react-native-google-signin/google-signin';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCi0yDu_CYvnnEZ1nFdiFy_zeg0389920",
