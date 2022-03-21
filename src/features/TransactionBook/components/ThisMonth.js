@@ -1,25 +1,57 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Text, View, Image, TouchableOpacity, FlatList, ScrollView } from "react-native"
 import { colors, fontSizes, images } from '../../../constants'
 import ItemTransition from './ItemTransition'
+import {
+    auth,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseDatabase,
+    doc,
+    setDoc,
+    collection,
+    GoogleSignin,
+    GoogleAuthProvider,
+    signInWithCredential,
+    addDoc,
+    getDocs,
+    getDoc,
+    query
+} from '../../../firebase/firebase'
 import moment from 'moment'
 
 const ThisMonth = (props) => {
+
     const { navigate, goBack } = props.navigation
-    console.log(props)
+    const [adu, setAdu] = useState([])
+
+    // useEffect(() => {
+    //     const getRa = async () => {
+    //         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+    //         const querySnapshot = await getDocs(q)
+    //         setAdu(querySnapshot.docs.map((details) => ({
+    //             ...details.data(),
+    //             id: details.id
+
+    //         }))) // Lấy ra toàn bộ wallets
+    //         // console.log(queryData)
+    //     }
+    //     getRa()
+    // }, [adu])
+
     const [transBook, setTransBook] = useState([
         {
             dayZoom: moment().format('DD'),
             monthYear: moment().format('MM-YYYY'),
-            proceeds: 20000000000,
+            money: 10000000000,
             proceedsCurrent: 20000000000
         },
         {
             dayZoom: moment().format('DD'),
             monthYear: moment().format('MM-YYYY'),
-            proceeds: 20000000000,
+            money: 10000000000,
             proceedsCurrent: 20000000000
-        }
+        },
     ])
 
     return <View style={{
@@ -86,23 +118,26 @@ const ThisMonth = (props) => {
         </View>
         <FlatList
             data={transBook}
-            keyExtractor={item => item.monthYear}
+            keyExtractor={item => item.idWalletGD}
             style={{
                 marginTop: 10,
                 flexDirection: 'column',
                 flex: 0.8,
             }}
-            renderItem={({ item, index }) =>
+            listKey={(item) => item.idWalletGD}
+            renderItem={({ item, index }) => 
                 <TouchableOpacity
                     onPress={() => {
                         navigate('EditTransactionBook')
                     }}>
                     <ItemTransition
                         item={item}
-                        index={index} />
+                        index={index}
+                        key={item.monthYear}
+                        adu={adu}
+                    />
                 </TouchableOpacity>
-            }
-        />
+            }/>
 
     </View>
 }

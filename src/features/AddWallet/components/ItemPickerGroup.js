@@ -7,8 +7,8 @@ import Modal from "react-native-modal";
 
 const ItemPickerGroup = (props) => {
 
-    const [selectedValue, setSelectedValue] = useState('Chọn nhóm');
-
+    // const [selectedValue, setSelectedValue] = useState('Chọn nhóm')
+    const { selectedValue, setSelectedValue } = props
     return <View style={{
         flexDirection: 'row'
     }}>
@@ -22,10 +22,17 @@ const ItemPickerGroup = (props) => {
             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
         >
             <Picker.Item label='Chọn nhóm' value='chonNhom' />
-            <Picker.Item label='JavaAA' enabled={false} />
-            <Picker.Item label='Java' value='java' />
-            <Picker.Item label='JavaAA' enabled={false} />
-            <Picker.Item label='JavaScript' value='js' />
+            <Picker.Item label='Chi tiêu hàng tháng' enabled={false} />
+            <Picker.Item label='Ăn uống' value='Ăn uống' />
+            <Picker.Item label='Thuê nhà' value='Thuê nhà' />
+            <Picker.Item label='Di chuyển' value='Di chuyển' />
+            <Picker.Item label='Hóa đơn nước' value='Hóa đơn nước' />
+            <Picker.Item label='Hóa đơn điện' value='Hóa đơn điện' />
+            <Picker.Item label='Chi tiêu cần thiết' enabled={false} />
+            <Picker.Item label='Sửa & trang trí nhà' value='Sửa & trang trí nhà' />
+            <Picker.Item label='Bảo dưỡng xe' value='Bảo dưỡng xe' />
+            <Picker.Item label='Khám sức khỏe' value='Khám sức khỏe' />
+            <Picker.Item label='Giáo dục' value='Giáo dục' />
         </Picker>
     </View >
 }

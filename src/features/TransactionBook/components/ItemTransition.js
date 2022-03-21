@@ -1,19 +1,20 @@
 import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, Dimensions, useWindowDimensions, ScrollView } from "react-native"
+import { Text, View, Image, TouchableOpacity, Dimensions, useWindowDimensions, ScrollView,FlatList } from "react-native"
 import { colors, fontSizes, images } from '../../../constants'
 import moment from 'moment'
+import ItemOfItemTransiton from "./ItemOfItemTransiton"
 
 const ItemTransition = (props) => {
 
     const {
         item,
         index,
+        adu
     } = props
 
-    return <View style={{
+    return <ScrollView style={{
         marginTop: 15,
         paddingHorizontal: 15,
-        height: 125,
         backgroundColor: 'white',
     }}>
         <View style={{
@@ -54,56 +55,33 @@ const ItemTransition = (props) => {
                         textAlign: 'right',
                         color: 'black',
                         fontWeight: 'bold',
-                    }}>+{item.proceeds} ₫</Text>
+                    }}>+{item.money} ₫</Text>
                 </View>
             </View>
         </View>
         {/** ---------------------- */}
-        <View style={{
-            marginTop: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-            flex: 1
-        }}>
-            <View style={{
-                flex: 0.15,
-            }}><Image
-                    source={images.wallet}
-                    style={{
-                        width: 35,
-                        height: 35,
-                    }} />
-            </View>
-            <View style={{
-                flexDirection: 'row',
-                flex: 0.85
-            }}>
-                <View style={{
-                    flex: 0.5,
-                    flexDirection: 'column',
-                }}>
-                    <Text style={{
-                        color: colors.text,
-                        fontSize: fontSizes.h5,
-                        fontWeight: 'bold'
-                    }}>Thu nhập khác</Text>
-                    <Text style={{
-                        color: colors.text,
-                        fontSize: fontSizes.h5,
-                    }}>Điều chỉnh số dư</Text>
-                </View>
-                <View style={{
-                    flex: 0.5
-                }}>
-                    <Text style={{
-                        fontSize: fontSizes.h5,
-                        textAlign: 'right',
-                        color: 'blue',
-                    }}>{item.proceedsCurrent}</Text>
-                </View>
-            </View>
-        </View>
-    </View>
+        {/* <ItemOfItemTransiton item={item} /> */}
+        {/* <FlatList
+            data={adu}
+            keyExtractor={item => item.proceeds}
+            style={{
+                marginTop: 10,
+                flexDirection: 'column',
+            }}            
+            listKey={(item) => item.descriptionAdd}
+            renderItem={({ item, index }) =>
+                <TouchableOpacity
+                  >
+                     
+                    <ItemOfItemTransiton
+                        item={item}
+                        index={index}
+                        />
+                
+                </TouchableOpacity>
+            }
+        /> */}
+    </ScrollView>
 }
 
 export default ItemTransition

@@ -10,8 +10,26 @@ import {
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValInput } from '../../../utilies/Validations'
+import {
+    auth,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseDatabase,
+    doc,
+    setDoc,
+    collection,
+    GoogleSignin,
+    GoogleAuthProvider,
+    signInWithCredential,
+    addDoc,
+    getDocs,
+    getDoc,
+    query
+} from '../../../firebase/firebase'
 
 const AddWalletTransaction = (props) => {
+    
+    const { navigate, goBack } = props.navigation
 
     const [nameWallet, setNameWallet] = useState('Tiền mặt')
     const [numberMoneyWallet, setNumberMoneyWallet] = useState('')
@@ -92,6 +110,7 @@ const AddWalletTransaction = (props) => {
                     borderBottomWidth: 2,
                     borderColor: colors.text,
                     fontSize: fontSizes.h5,
+                    fontWeight: 'bold',
                 }}
                 value={'VND'}
             />
@@ -123,12 +142,23 @@ const AddWalletTransaction = (props) => {
             />
             <TouchableOpacity
                 disabled={!isValidtionOk() == true}
-                onPress={() => {
-                    alert('OK')
+                onPress={async () => {
+                    const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallettransaction'))
+                    await setDoc(colRef, {
+                        nameWallet: nameWallet,
+                        numberMoneyWallet: numberMoneyWallet,
+                    }).then(() => {
+                        console.log('OK')
+                        navigate('UITabView')
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                    console.log(colRef.id)
+
                 }}
                 style={{
                     marginTop: 60,
-                    backgroundColor: isValidtionOk() == true ? colors.primary : colors.inactive,
+                    backgroundColor: isValidtionOk() == true ? '#EBF8EE' : colors.inactive,
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 35,
@@ -137,8 +167,8 @@ const AddWalletTransaction = (props) => {
                 <Text style={{
                     padding: 8,
                     fontSize: fontSizes.h5,
-                    color: 'white'
-                }}>Tạo ví</Text>
+                    color: isValidtionOk() == true ? colors.primary : 'white',
+                }}>TẠO VÍ</Text>
             </TouchableOpacity>
         </View>
     </ScrollView>
