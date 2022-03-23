@@ -28,8 +28,9 @@ import {
 } from '../../../firebase/firebase'
 
 const AddWalletTransaction = (props) => {
-    
+
     const { navigate, goBack } = props.navigation
+    const { email, password } = props.route.params
 
     const [nameWallet, setNameWallet] = useState('Tiền mặt')
     const [numberMoneyWallet, setNumberMoneyWallet] = useState('')
@@ -143,17 +144,29 @@ const AddWalletTransaction = (props) => {
             <TouchableOpacity
                 disabled={!isValidtionOk() == true}
                 onPress={async () => {
-                    const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallettransaction'))
-                    await setDoc(colRef, {
-                        nameWallet: nameWallet,
-                        numberMoneyWallet: numberMoneyWallet,
-                    }).then(() => {
-                        console.log('OK')
-                        navigate('UITabView')
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-                    console.log(colRef.id)
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then(async (re) => {
+                            let newUserRef = doc(firebaseDatabase, 'users', email)
+                            await setDoc(newUserRef, {
+                                email,
+                                nameWallet: nameWallet,
+                                numberMoneyWallet: numberMoneyWallet,
+                            })
+                            navigate('UITabView')
+                            console.log(re)
+                        }).catch((re) => {
+                            console.log(re)
+                        })
+                    // const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallettransaction'))
+                    // await setDoc(colRef, {
+
+                    // }).then(() => {
+                    //     console.log('OK')
+                    //     navigate('UITabView')
+                    // }).catch((error) => {
+                    //     console.log(error)
+                    // })
+                    // console.log(colRef.id)
 
                 }}
                 style={{

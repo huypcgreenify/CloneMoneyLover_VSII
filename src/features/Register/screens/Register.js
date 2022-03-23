@@ -22,7 +22,10 @@ import {
     collection,
     GoogleSignin,
     GoogleAuthProvider,
-    signInWithCredential
+    signInWithCredential,
+    addDoc, 
+    getDocs,
+    
 } from '../../../firebase/firebase'
 
 const Register = (props) => {
@@ -53,7 +56,7 @@ const Register = (props) => {
             // console.log(user_sign_in)
             user_sign_in.then(async (users) => {
                 let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
-                await setDoc(newUserRef, { email })
+                await addDoc(newUserRef, { email })
                 navigate('UITabView')
             }).catch((error) => {
                 console.log(error)
@@ -222,16 +225,16 @@ const Register = (props) => {
                 }}>
                     <TouchableOpacity
                         disabled={!isValidtionOk() == true}
-                        onPress={() => {
-                            createUserWithEmailAndPassword(auth, email, password)
-                                .then(async (re) => {
-                                    let newUserRef = doc(firebaseDatabase, 'users', email)
-                                    await setDoc(newUserRef, { email })
-                                    console.log(re)
-                                    navigate('AddWalletTransaction')
-                                }).catch((re) => {
-                                    console.log(re)
-                                })
+                        onPress={async () => {
+                            let flag = true
+                            const querySnapshot = await getDocs(collection(firebaseDatabase, "users"))
+                            querySnapshot.forEach((doc) => {
+                                if (doc.id == email) {
+                                    flag = false
+                                }
+                                // doc.id == email ? flag = true : ''
+                            })
+                            flag ? navigate('AddWalletTransaction', { email: email, password: password }) : alert('Tài khoản đã có!')
                         }}
                         style={{
                             backgroundColor: isValidtionOk() == true ? colors.primary : colors.inactive,

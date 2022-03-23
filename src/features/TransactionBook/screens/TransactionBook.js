@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import {
     Text,
     View,
@@ -12,10 +12,39 @@ import {
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import UITabTopTransactionBook from '../navigations/UITabTopTransactionBook'
+import {
+    auth,
+    firebaseDatabase,
+    collection,
+    getDocs,
+    query,
+    onSnapshot,
+    where,
+    updateDoc,
+    doc
+} from '../../../firebase/firebase'
 
 const TransactionBook = (props) => {
 
     const { navigate, goBack } = props.navigation
+    const [adu2, setAdu2] = useState('')
+    const [adu3, setAdu3] = useState('')
+    useEffect(() => {
+        const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
+        onSnapshot(q, (querySnapshot) =>
+            setAdu2(querySnapshot.docs.map((details) => {
+                return details.data().nameWallet 
+            })))
+    }, [])
+
+    useEffect(() => {
+        const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
+        onSnapshot(q, (querySnapshot) =>
+            setAdu3(querySnapshot.docs.map((details) => {
+                return details.data().numberMoneyWallet 
+            })))
+    }, [])
+
 
     const backAction = () => {
         if (props.navigation.isFocused()) {
@@ -83,13 +112,13 @@ const TransactionBook = (props) => {
                     color: colors.text,
                     textAlign: 'center',
                     fontSize: fontSizes.h6
-                }}>Tiền mặt</Text>
+                }}>{adu2}</Text>
                 <Text style={{
                     textAlign: 'center',
                     fontSize: 15,
                     fontWeight: 'bold',
                     color: 'black'
-                }}>2.000.000.000 ₫</Text>
+                }}>{adu3} ₫</Text>
             </View>
             <TouchableOpacity
                 onPress={() => {

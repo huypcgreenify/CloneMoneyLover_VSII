@@ -18,7 +18,7 @@ const DateTimePickerr = (props) => {
         setDate(currentDate);
 
         let tempDate = new Date(currentDate)
-        let fDate = tempDate.getDate() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getFullYear()
+        let fDate = moment(tempDate).format('DD-MM-YYYY')
         setText(fDate)
     };
 
@@ -45,6 +45,7 @@ const DateTimePickerr = (props) => {
         {
             show && (
                 <DateTimePicker
+                    format={'DD-MM-YYYY'}
                     style={{ flex: 1, backgroundColor: 'red' }}
                     testID="dateTimePicker"
                     value={date}
