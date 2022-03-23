@@ -22,17 +22,17 @@ const ItemPickerGroup = (props) => {
             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
         >
             <Picker.Item label='Chọn nhóm' value='chonNhom' />
-            <Picker.Item label='Chi tiêu hàng tháng' enabled={false} />
-            <Picker.Item label='Ăn uống' value='Ăn uống' />
-            <Picker.Item label='Thuê nhà' value='Thuê nhà' />
-            <Picker.Item label='Di chuyển' value='Di chuyển' />
-            <Picker.Item label='Hóa đơn nước' value='Hóa đơn nước' />
-            <Picker.Item label='Hóa đơn điện' value='Hóa đơn điện' />
-            <Picker.Item label='Chi tiêu cần thiết' enabled={false} />
+            <Picker.Item label='Chi tiêu' enabled={false} />
+            <Picker.Item label='Ăn uống' value='Ăn uống chi' />
+            <Picker.Item label='Thuê nhà' value='Thuê nhà chi' />
+            <Picker.Item label='Di chuyển' value='Di chuyển chi' />
+            <Picker.Item label='Hóa đơn nước' value='Hóa đơn nước chi' />
+            <Picker.Item label='Hóa đơn điện' value='Hóa đơn điện chi' />
+            <Picker.Item label='Bảo dưỡng xe' value='Bảo dưỡng xe chi' />
             <Picker.Item label='Sửa & trang trí nhà' value='Sửa & trang trí nhà' />
-            <Picker.Item label='Bảo dưỡng xe' value='Bảo dưỡng xe' />
-            <Picker.Item label='Khám sức khỏe' value='Khám sức khỏe' />
-            <Picker.Item label='Giáo dục' value='Giáo dục' />
+            <Picker.Item label='Khoản thu' enabled={false} />
+            <Picker.Item label='Tiền lương' value='Tiền lương thu' />
+            <Picker.Item label='Thu nhập khác' value='Giáo dục thu' />
         </Picker>
     </View >
 }

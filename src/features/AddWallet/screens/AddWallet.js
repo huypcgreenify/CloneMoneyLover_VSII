@@ -40,32 +40,25 @@ import moment from 'moment'
 
 const AddWallet = (props) => {
 
-
     const { navigate, goBack } = props.navigation
     const [money, setMoney] = useState('')
     const [selectedValueGroup, setSelectedValueGroup] = useState('')
     const [descriptionAdd, setDescriptionAdd] = useState('')
     const [text, setText] = useState(moment().format('DD-MM-YYYY'))
     const [adu, setAdu] = useState([])
-    const test3 = collection(firebaseDatabase, 'wallets')
     const guidGenerator = () => {
         const S4 = () => {
             return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
         }
         return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
     }
-    // useEffect(() => {
-    //     const getRa = async () => {
-    //         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
-    //         const querySnapshot = await getDocs(q)
-    //         setAdu(querySnapshot.docs.map((details) => ({
-    //             ...details.data(),
-    //             id: details.id
-    //         }))) // Lấy ra toàn bộ wallets
-    //         // console.log(queryData)
-    //     }
-    //     getRa()
-    // }, [adu])
+
+    const setDefaultValue = () => {
+        setMoney(0)
+        setSelectedValueGroup('')
+        setDescriptionAdd('')
+        setText(moment().format('DD-MM-YYYY'))
+    }
 
     return <KeyboardAvoidingView
         enabled
@@ -82,48 +75,22 @@ const AddWallet = (props) => {
                 goBack()
             }}
             onPressRightIcon={async () => {
-                // alert(`${auth.currentUser.uid}`)
-                // await addDoc(test3, {
-                //     userId: auth.currentUser.uid,
-                //     money: money
-                // }).then(() => {
-                //     console.log('OK')
-                // }).catch((error) => {
-                //     console.log(error)
-                // })
-
-                // const myDoc = await getDocs(collection(firebaseDatabase, 'users/wallets'))
-                // console.log(myDoc.docs[0].data()); // "doc1"
-                // getDoc(myDoc).then((snapshot) => {
-                //     if (snapshot.exists) {
-                //         setAdu(snapshot.data())
-                //     } else {
-                //         alert('No snapshot found')
-                //     }
-                // }).catch((error) => {
-                //     console.log(error)
-                // })
-
+                const subStringSelect = selectedValueGroup.slice(0, selectedValueGroup.length - 4)
+                const subStringType = selectedValueGroup.slice(-3)
                 const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
                 await setDoc(colRef, {
                     money: money,
-                    selectedValueGroup: selectedValueGroup,
+                    selectedValueGroup: subStringSelect,
                     descriptionAdd: descriptionAdd,
                     textTime: text,
                     idWalletGD: guidGenerator(),
+                    type: subStringType
                 }).then(() => {
-                    console.log('OK')
+                    setDefaultValue()
+                    goBack()
                 }).catch((error) => {
                     console.log(error)
                 })
-                console.log(colRef.id)
-
-
-
-                // await setDoc(doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets')), {
-                //     money: money,
-                // })
-
             }}
         />
         <ScrollView>
@@ -338,14 +305,6 @@ const AddWallet = (props) => {
                                 flexDirection: 'column',
                                 alignItems: 'center',
                             }}>
-                            {/* {adu != null &&
-                                <Text style={{
-                                    fontSize: 16,
-                                    color: 'black',
-                                    fontWeight: 'bold',
-                                    textAlign: 'center',
-                                }}>{adu.money}</Text>
-                            } */}
                             {adu.map((gigi) => {
                                 return <View style={{
                                     flexDirection: 'column'

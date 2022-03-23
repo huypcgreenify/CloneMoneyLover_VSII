@@ -13,17 +13,18 @@ import {
     signInWithCredential,
 } from 'firebase/auth'
 import {
-    getFirestore,
     collection,
     getDocs,
     doc,
     setDoc,
     addDoc,
     getDoc,
-    refEqual,
+    where,
     query,
-
-} from 'firebase/firestore/lite'
+    initializeFirestore,
+    onSnapshot,
+    updateDoc
+} from 'firebase/firestore'
 import {
     GoogleSignin,
 } from '@react-native-google-signin/google-signin';
@@ -40,7 +41,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
-const firebaseDatabase = getFirestore(app)
+// const firebaseDatabase = getFirestore(app)
+const firebaseDatabase = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+});
 GoogleSignin.configure({
     webClientId: '577226254905-i4ukch7nqa1nk9kobuiddsdrhtkcjial.apps.googleusercontent.com',
 });
@@ -65,5 +69,8 @@ export {
     signInWithCredential,
     addDoc,
     getDoc,
-    query
+    query,
+    onSnapshot,
+    where,
+    updateDoc
 }

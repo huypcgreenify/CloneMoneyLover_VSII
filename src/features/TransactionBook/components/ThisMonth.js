@@ -4,19 +4,14 @@ import { colors, fontSizes, images } from '../../../constants'
 import ItemTransition from './ItemTransition'
 import {
     auth,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
     firebaseDatabase,
-    doc,
-    setDoc,
     collection,
-    GoogleSignin,
-    GoogleAuthProvider,
-    signInWithCredential,
-    addDoc,
     getDocs,
-    getDoc,
-    query
+    query,
+    onSnapshot,
+    where,
+    updateDoc,
+    doc
 } from '../../../firebase/firebase'
 import moment from 'moment'
 
@@ -24,36 +19,52 @@ const ThisMonth = (props) => {
 
     const { navigate, goBack } = props.navigation
     const [adu, setAdu] = useState([])
+    const [adu2, setAdu2] = useState('')
+    
 
+    useEffect(() => {
+        const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+        onSnapshot(q, (querySnapshot) =>
+            setAdu(querySnapshot.docs.map((details) => ({
+                ...details.data(),
+                id: details.id
+            }))))
+    }, [])
+
+    useEffect(() => {
+        const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
+        onSnapshot(q, (querySnapshot) =>
+            setAdu2(querySnapshot.docs.map((details) => {
+                console.log(details.data().numberMoneyWallet)
+                return details.data().numberMoneyWallet
+            })))
+    }, [])
+
+  
+
+
+    const aduuu = adu.reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
+
+    
+
+    const small_animals2 = adu.filter((animal) => {
+        return animal.type === 'thu'
+    }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
+    const tong = Number(adu2) + small_animals2
+
+    const small_animals = adu.filter((animal) => {
+        return animal.type === 'chi'
+    }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
+    console.log(small_animals)
+    const hieu = tong - small_animals
+
+    console.log(hieu)
     // useEffect(() => {
-    //     const getRa = async () => {
-    //         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
-    //         const querySnapshot = await getDocs(q)
-    //         setAdu(querySnapshot.docs.map((details) => ({
-    //             ...details.data(),
-    //             id: details.id
-
-    //         }))) // Lấy ra toàn bộ wallets
-    //         // console.log(queryData)
-    //     }
-    //     getRa()
-    // }, [adu])
-
-    const [transBook, setTransBook] = useState([
-        {
-            dayZoom: moment().format('DD'),
-            monthYear: moment().format('MM-YYYY'),
-            money: 10000000000,
-            proceedsCurrent: 20000000000
-        },
-        {
-            dayZoom: moment().format('DD'),
-            monthYear: moment().format('MM-YYYY'),
-            money: 10000000000,
-            proceedsCurrent: 20000000000
-        },
-    ])
-
+    //     let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
+    //     updateDoc(newUserRef, {
+    //         numberMoneyWallet: hieu,
+    //     })
+    // }, [])
     return <View style={{
         flex: 1
     }}>
@@ -75,7 +86,7 @@ const ThisMonth = (props) => {
                 <Text style={{
                     fontSize: fontSizes.h5,
                     color: 'black'
-                }}>0.00 ₫</Text>
+                }}> {tong} ₫</Text>
             </View>
             <View style={{
                 color: colors.text,
@@ -90,7 +101,7 @@ const ThisMonth = (props) => {
                 <Text style={{
                     fontSize: fontSizes.h5,
                     color: 'black'
-                }}>+1,950,000,000.00 ₫</Text>
+                }}> {small_animals} ₫</Text>
             </View>
             <View style={{
                 flexDirection: 'row'
@@ -113,19 +124,19 @@ const ThisMonth = (props) => {
                     color: 'black',
                     fontWeight: 'bold',
                     fontSize: fontSizes.h5
-                }}>+1,950,000,000.00 ₫</Text>
+                }}>{hieu} ₫</Text>
             </View>
         </View>
         <FlatList
-            data={transBook}
-            keyExtractor={item => item.idWalletGD}
+            data={adu}
             style={{
                 marginTop: 10,
                 flexDirection: 'column',
                 flex: 0.8,
             }}
-            listKey={(item) => item.idWalletGD}
-            renderItem={({ item, index }) => 
+            keyExtractor={(item, index) => (item + index)}
+            listKey={(item, index) => (item + index)}
+            renderItem={({ item, index }) =>
                 <TouchableOpacity
                     onPress={() => {
                         navigate('EditTransactionBook')
@@ -133,11 +144,10 @@ const ThisMonth = (props) => {
                     <ItemTransition
                         item={item}
                         index={index}
-                        key={item.monthYear}
-                        adu={adu}
+                        key={item.id}
                     />
                 </TouchableOpacity>
-            }/>
+            } />
 
     </View>
 }
