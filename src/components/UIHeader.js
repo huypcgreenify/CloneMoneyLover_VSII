@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors, fontSizes } from '../constants'
 
 const UIHeader = (props) => {
+
     const {
         title,
         leftIconName,
         rightIconName,
         onPressLeftIcon,
         onPressRightIcon,
-        textUIHeader
-    } = props //truyền dữ liệu từ màn này sang màn khác
+        textUIHeader,
+        isCheck
+    } = props
 
     return <View style={{
         height: 50,
@@ -50,6 +52,7 @@ const UIHeader = (props) => {
             size={23}
             color={'white'}></Icon> :
             <TouchableOpacity
+                disabled={!isCheck == true}
                 onPress={onPressRightIcon}
                 style={{
                     padding: 10,
@@ -59,6 +62,7 @@ const UIHeader = (props) => {
                     justifyContent: 'center',
                 }}><Text style={{
                     fontSize: 16,
+                    color: isCheck == true ? colors.primary : colors.inactive,
                 }}>{textUIHeader}</Text>
             </TouchableOpacity>}
     </View>

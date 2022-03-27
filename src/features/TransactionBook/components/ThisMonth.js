@@ -1,139 +1,59 @@
 import React, { useState, useEffect } from "react"
-import { Text, View, Image, TouchableOpacity, FlatList, ScrollView } from "react-native"
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, } from "react-native"
 import { colors, fontSizes, images } from '../../../constants'
 import ItemTransition from './ItemTransition'
-import {
-    auth,
-    firebaseDatabase,
-    collection,
-    getDocs,
-    query,
-    onSnapshot,
-    where,
-    updateDoc,
-    doc
-} from '../../../firebase/firebase'
-import moment from 'moment'
+import { auth, firebaseDatabase, collection, query, onSnapshot, } from '../../../firebase/firebase'
 
 const ThisMonth = (props) => {
 
     const { navigate, goBack } = props.navigation
-    const [adu, setAdu] = useState([])
-    const [adu2, setAdu2] = useState('')
-    
-
+    const [usersList, setUsersList] = useState([])
+    const calculateIncome = usersList.filter((usersType) => {
+        return usersType.type === 'thu'
+    }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
+    const calculateExpense = usersList.filter((usersType) => {
+        return usersType.type === 'chi'
+    }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
+    const moneyChange = calculateIncome - calculateExpense
     useEffect(() => {
         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
         onSnapshot(q, (querySnapshot) =>
-            setAdu(querySnapshot.docs.map((details) => ({
+            setUsersList(querySnapshot.docs.map((details) => ({
                 ...details.data(),
                 id: details.id
             }))))
     }, [])
 
-    useEffect(() => {
-        const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
-        onSnapshot(q, (querySnapshot) =>
-            setAdu2(querySnapshot.docs.map((details) => {
-                console.log(details.data().numberMoneyWallet)
-                return details.data().numberMoneyWallet
-            })))
-    }, [])
-
-  
-
-
-    const aduuu = adu.reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
-
-    
-
-    const small_animals2 = adu.filter((animal) => {
-        return animal.type === 'thu'
-    }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
-    const tong = Number(adu2) + small_animals2
-
-    const small_animals = adu.filter((animal) => {
-        return animal.type === 'chi'
-    }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
-    console.log(small_animals)
-    const hieu = tong - small_animals
-
-    console.log(hieu)
     // useEffect(() => {
-    //     let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
-    //     updateDoc(newUserRef, {
-    //         numberMoneyWallet: hieu,
-    //     })
+    //     const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
+    //     onSnapshot(q, (querySnapshot) =>
+    //         setNumberMoneyWalletList(querySnapshot.docs.map((details) => {
+    //             console.log(details.data().numberMoneyWallet)
+    //             return details.data().numberMoneyWallet
+    //         })))
     // }, [])
-    return <View style={{
-        flex: 1
-    }}>
-        <View style={{
-            flex: 0.2,
-            padding: 15,
-            backgroundColor: 'white',
-            flexDirection: 'column'
-        }}>
-            <View style={{
-                marginTop: 10,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-            }}>
-                <Text style={{
-                    color: colors.text,
-                    fontSize: fontSizes.h5
-                }}>Số dư đầu</Text>
-                <Text style={{
-                    fontSize: fontSizes.h5,
-                    color: 'black'
-                }}> {tong} ₫</Text>
+
+    return <View style={styles.container}>
+        <View style={styles.view_1}>
+            <View style={styles.view_1_1}>
+                <Text style={styles.txtMoneyIncome}>Tiền vào</Text>
+                <Text style={styles.txtCaculateInCome}>{calculateIncome} ₫</Text>
             </View>
-            <View style={{
-                color: colors.text,
-                marginTop: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-            }}>
-                <Text style={{
-                    color: colors.text,
-                    fontSize: fontSizes.h5
-                }}>Số dư cuối</Text>
-                <Text style={{
-                    fontSize: fontSizes.h5,
-                    color: 'black'
-                }}> {small_animals} ₫</Text>
+            <View style={styles.view_1_2}>
+                <Text style={styles.txtExpense}>Tiền ra</Text>
+                <Text style={styles.txtCaculateExpense}>{calculateExpense} ₫</Text>
             </View>
-            <View style={{
-                flexDirection: 'row'
-            }}>
-                <View style={{
-                    flex: 1
-                }}></View>
-                <View style={{
-                    width: '40%',
-                    marginTop: 5,
-                    height: 1,
-                    backgroundColor: colors.inactive
-                }}></View>
+            <View style={styles.view_1_3}>
+                <View style={styles.view_1_3_1}></View>
+                <View style={styles.view_1_3_2}></View>
             </View>
-            <View style={{
-                marginTop: 5,
-                alignItems: 'flex-end'
-            }}>
-                <Text style={{
-                    color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: fontSizes.h5
-                }}>{hieu} ₫</Text>
+            <View style={styles.view_1_4}>
+                <Text style={styles.txtMoneyChange}>{moneyChange} ₫</Text>
             </View>
         </View>
         <FlatList
-            data={adu}
-            style={{
-                marginTop: 10,
-                flexDirection: 'column',
-                flex: 0.8,
-            }}
+            data={usersList}
+            style={styles.flShowTransaction}
             keyExtractor={(item, index) => (item + index)}
             listKey={(item, index) => (item + index)}
             renderItem={({ item, index }) =>
@@ -145,11 +65,74 @@ const ThisMonth = (props) => {
                         item={item}
                         index={index}
                         key={item.id}
-                    />
-                </TouchableOpacity>
+                    /></TouchableOpacity>
             } />
-
     </View>
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    view_1: {
+        flex: 0.2,
+        padding: 15,
+        backgroundColor: 'white',
+        flexDirection: 'column',
+    },
+    view_1_1: {
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    txtMoneyIncome: {
+        color: colors.text,
+        fontSize: fontSizes.h5,
+    },
+    txtCaculateInCome: {
+        fontSize: fontSizes.h5,
+        color: 'black',
+    },
+    view_1_2: {
+        color: colors.text,
+        marginTop: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    txtExpense: {
+        color: colors.text,
+        fontSize: fontSizes.h5,
+    },
+    txtCaculateExpense: {
+        fontSize: fontSizes.h5,
+        color: 'black',
+    },
+    view_1_3: {
+        flexDirection: 'row'
+    },
+    view_1_3_1: {
+        flex: 1,
+    },
+    view_1_3_2: {
+        width: '40%',
+        marginTop: 5,
+        height: 1,
+        backgroundColor: colors.inactive,
+    },
+    view_1_4: {
+        marginTop: 5,
+        alignItems: 'flex-end',
+    },
+    txtMoneyChange: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: fontSizes.h5,
+    },
+    flShowTransaction: {
+        marginTop: 10,
+        flexDirection: 'column',
+        flex: 0.8,
+    }
+})
 
 export default ThisMonth

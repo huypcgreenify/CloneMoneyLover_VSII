@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useRef } from "react"
-import { Text, View, Animated, useWindowDimensions } from "react-native"
-import { images, icons, colors, fontSizes } from '../../../constants'
-
+import React from "react"
+import { StyleSheet, View, Animated, useWindowDimensions } from "react-native"
+import { colors, } from '../../../constants'
 
 const Paginator = ({ data, scrollX }) => {
 
     const { width } = useWindowDimensions()
 
     return (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={styles.container}>
             {data.map((_, i) => {
 
                 const inputRange = [(i - 1) * width, i * width, (i + 1) * width]
@@ -24,7 +23,6 @@ const Paginator = ({ data, scrollX }) => {
                     outputRange: [0.3, 1, 0.3],
                     extrapolate: 'clamp'
                 })
-
                 return <Animated.View style={{
                     height: 10,
                     borderRadius: 5,
@@ -35,7 +33,10 @@ const Paginator = ({ data, scrollX }) => {
                 }} key={i.toString()} />
             })}
         </View>
-    )
-}
+    )}
+
+const styles = StyleSheet.create({
+    container: { flexDirection: 'row' }
+})
 
 export default Paginator

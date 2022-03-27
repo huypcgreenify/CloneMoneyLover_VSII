@@ -1,14 +1,6 @@
-import React, { useEffect } from "react"
-import {
-    Text,
-    View,
-    Image,
-    TouchableOpacity,
-    Dimensions,
-    useWindowDimensions,
-} from 'react-native'
-import { images, icons, colors, fontSizes } from '../../../constants'
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import React from "react"
+import { Text, View, } from 'react-native'
+
 
 const EditTransactionBook = (props) => {
     return <View style={{}}>
