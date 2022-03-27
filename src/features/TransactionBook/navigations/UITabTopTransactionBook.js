@@ -17,8 +17,7 @@ const UITabTopTransactionBook = (props) => {
                 tabBarActiveTintColor: 'white',
                 tabBarStyle: { backgroundColor: 'powderblue' },
             }
-        }
-        }>
+        }}>
         <Tab.Screen
             options={{
                 tabBarLabel: 'Các tháng trước',

@@ -1,4 +1,4 @@
-import { images, icons, colors, fontSizes } from '../../../constants'
+import { images } from '../../../constants'
 
 export default [
     {
@@ -21,24 +21,24 @@ export default [
         image2: images.star,
         image3: images.like,
     },
-    {
-        id: '3',
-        title: 'Hàng triệu người dùng tin tưởng và yêu mến',
-        description1: `Ứng dụng tuyệt vời để theo dõi chi tiêu`,
-        description2: `Thực hiện các mục tiêu tiết kiệm         `,
-        description3: null,
-        image1: images.star,
-        image2: images.star,
-        image3: images.like,
-    },
-    {
-        id: '4',
-        title: 'Hàng triệu người dùng tin tưởng và yêu mến',
-        description1: `Ứng dụng tuyệt vời để theo dõi chi tiêu`,
-        description2: `Thực hiện các mục tiêu tiết kiệm         `,
-        description3: null,
-        image1: images.star,
-        image2: images.star,
-        image3: images.like,
-    },
+    // {
+    //     id: '3',
+    //     title: 'Hàng triệu người dùng tin tưởng và yêu mến',
+    //     description1: `Ứng dụng tuyệt vời để theo dõi chi tiêu`,
+    //     description2: `Thực hiện các mục tiêu tiết kiệm         `,
+    //     description3: null,
+    //     image1: images.star,
+    //     image2: images.star,
+    //     image3: images.like,
+    // },
+    // {
+    //     id: '4',
+    //     title: 'Hàng triệu người dùng tin tưởng và yêu mến',
+    //     description1: `Ứng dụng tuyệt vời để theo dõi chi tiêu`,
+    //     description2: `Thực hiện các mục tiêu tiết kiệm         `,
+    //     description3: null,
+    //     image1: images.star,
+    //     image2: images.star,
+    //     image3: images.like,
+    // },
 ]

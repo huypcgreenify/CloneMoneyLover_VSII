@@ -121,6 +121,7 @@ const AddWalletTransaction = (props) => {
                 marginTop: 30
             }}>Số dư</Text>
             <TextInput
+                maxLength={12}
                 value={numberMoneyWallet}
                 onChangeText={(text) => {
                     { isValInput(text) || text === '' ? setNumberMoneyWallet(text) : '' }

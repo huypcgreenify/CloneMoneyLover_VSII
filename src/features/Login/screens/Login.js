@@ -1,21 +1,13 @@
 import React, { useState } from "react"
-import { Text, View, TouchableOpacity, ScrollView, useWindowDimensions, TextInput, Keyboard } from "react-native"
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { isValidEmail, isValidPassword } from '../../../utilies/Validations'
-import {
-    auth,
-    signInWithEmailAndPassword,
-    GoogleSignin,
-    GoogleAuthProvider,
-    signInWithCredential
-} from '../../../firebase/firebase'
-
+import { auth, signInWithEmailAndPassword, GoogleSignin, GoogleAuthProvider, signInWithCredential } from '../../../firebase/firebase'
 
 const Login = (props) => {
 
-    const { width } = useWindowDimensions()
-    //Email&Pass - Validate...
+    const { navigate, goBack } = props.navigation
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
     const [email, setEmail] = useState('')
@@ -27,16 +19,11 @@ const Login = (props) => {
     const [isSecureEntry, setIsSecureEntry] = useState(true)
     const [focusEmail, setFocusEmail] = useState(false)
     const [focusPassword, setFocusPassword] = useState(false)
-    //function of navigation to/back
-    const { navigate, goBack } = props.navigation
 
     const signInWithGoogleAsync = async () => {
         const { idToken } = await GoogleSignin.signIn();
-        console.log('id: ' + idToken)
         const googleCredential = GoogleAuthProvider.credential(idToken)
-        console.log('id: ' + googleCredential)
         const user_sign_in = signInWithCredential(auth, googleCredential)
-        console.log(user_sign_in)
         user_sign_in.then((users) => {
             navigate('UITabView')
             console.log(users)
@@ -45,89 +32,31 @@ const Login = (props) => {
         })
     }
 
-    return <View style={{
-        backgroundColor: 'white',
-        flex: 1,
-    }}>
+    return <View style={styles.container}>
         <ScrollView>
             <TouchableOpacity
                 onPress={() => {
                     goBack()
                 }}
-                style={{
-                    padding: 15
-                }}><Icon name={'arrow-left'} size={18} color={'black'} />
+                style={{ padding: 15 }}><Icon name={'arrow-left'} size={18} color={'black'} />
             </TouchableOpacity>
-            <View style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Text style={{
-                    fontSize: fontSizes.h1,
-                    color: 'black'
-                }}>Đăng nhập</Text>
+            <View style={styles.view_1}>
+                <Text style={styles.txtSign}>Đăng nhập</Text>
                 <TouchableOpacity
                     onPress={() => {
                         signInWithGoogleAsync()
                     }}
-                    style={{
-                        flexDirection: 'row',
-                        borderWidth: 1,
-                        padding: 5,
-                        borderColor: 'red',
-                        width: '80%',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        borderRadius: 5,
-                        marginTop: 20,
-                        height: 40
-                    }}>
-                    <Icon style={{
-                        paddingStart: 2
-                    }}
-                        name={'google'}
-                        size={20}
-                        color={colors.google} />
-                    <Text style={{
-                        color: 'red',
-                        fontSize: fontSizes.h5,
-                        marginLeft: '10%'
-                    }}>Kết nối với Google</Text>
+                    style={styles.touchableOpacitySignGG}>
+                    <Icon style={{ paddingStart: 2 }} name={'google'} size={20} color={colors.google} />
+                    <Text style={styles.txtSignGG}>Kết nối với Google</Text>
                 </TouchableOpacity>
-                <Text style={{
-                    color: colors.inactive,
-                    fontSize: fontSizes.h6,
-                    width: '70%',
-                    textAlign: 'center',
-                    marginTop: 12
-                }}>Chúng tôi sẽ không đăng thông tin mà không có sự cho phép của bạn</Text>
-                <View style={{
-                    height: 40,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginTop: 15
-                }}>
-                    <View style={{
-                        backgroundColor: colors.inactive,
-                        height: 1,
-                        flex: 1
-                    }}></View>
-                    <Text style={{
-                        color: colors.inactive,
-                        alignItems: 'center',
-                        padding: 8,
-                        fontSize: fontSizes.h5
-                    }}>HOẶC</Text>
-                    <View style={{
-                        backgroundColor: colors.inactive,
-                        height: 1,
-                        flex: 1
-                    }}></View>
+                <Text style={styles.txtSecurity}>Chúng tôi sẽ không đăng thông tin mà không có sự cho phép của bạn</Text>
+                <View style={styles.view_1_1}>
+                    <View style={styles.view_1_1_1}></View>
+                    <Text style={styles.txtOr}>HOẶC</Text>
+                    <View style={styles.view_1_1_2}></View>
                 </View>
-                <View style={{
-                    width: '85%',
-                    marginTop: 14
-                }}>
+                <View style={styles.view_1_2}>
                     <TextInput
                         value={email}
                         onChangeText={(text) => {
@@ -196,25 +125,20 @@ const Login = (props) => {
                     </TouchableOpacity>
                 </View>
                 {email.length > 0 ? (errorEmail ?
-                    <Text style={{ color: 'red', fontSize: fontSizes.h6, marginBottom: 10 }}>{errorEmail}</Text>
+                    <Text style={styles.txtErrorEmail}>{errorEmail}</Text>
                     : <View></View>) : <View></View>
                 }
-                {password.length > 0 ? (errorPassword ? <Text style={{ color: 'red', fontSize: fontSizes.h6, marginBottom: 10 }}>{errorPassword}</Text>
+                {password.length > 0 ? (errorPassword ? <Text style={styles.txtErrorPass}>{errorPassword}</Text>
                     : <View></View>) : <View></View>
                 }
-                <View style={{
-                    marginTop: 15,
-                    width: '78%',
-                }}>
+                <View style={styles.view_1_3}>
                     <TouchableOpacity
                         disabled={!isValidtionOk() == true}
                         onPress={() => {
                             signInWithEmailAndPassword(auth, email, password)
                                 .then((re) => {
-                                    // debugger
                                     console.log(re)
                                     navigate('UITabView')
-                                    // debugger
                                 }).catch((error) => {
                                     console.log(error)
                                     alert(`Cannot sign in, error: ${error.message}`)
@@ -227,38 +151,22 @@ const Login = (props) => {
                             borderRadius: 5,
                             height: 35,
                         }}>
-                        <Text style={{
-                            padding: 8,
-                            fontSize: fontSizes.h5,
-                            color: 'white'
-                        }}>ĐĂNG NHẬP</Text>
+                        <Text style={styles.txtSignSmall}>ĐĂNG NHẬP</Text>
                     </TouchableOpacity>
-                    <View style={{
-                        marginTop: 5,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between'
-                    }}>
+                    <View style={styles.view_1_3_1}>
                         <TouchableOpacity
                             onPress={() => {
                                 navigate('Register')
                             }}
                             style={{ padding: 5 }}>
-                            <Text style={{
-                                paddingVertical: 10,
-                                fontSize: fontSizes.h5,
-                                color: colors.primary,
-                            }}>Đăng ký</Text>
+                            <Text style={styles.txtRegister}>Đăng ký</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
-
+                                alert('Comming soon!')
                             }}
                             style={{ padding: 5 }}>
-                            <Text style={{
-                                paddingVertical: 10,
-                                fontSize: fontSizes.h5,
-                                color: colors.primary,
-                            }}>Quên mật khẩu?</Text>
+                            <Text style={styles.txtForgot}>Quên mật khẩu?</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -266,5 +174,104 @@ const Login = (props) => {
         </ScrollView>
     </View>
 }
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
+        flex: 1,
+    },
+    view_1: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    txtSign: {
+        fontSize: fontSizes.h1,
+        color: 'black',
+    },
+    touchableOpacitySignGG: {
+        flexDirection: 'row',
+        borderWidth: 1,
+        padding: 5,
+        borderColor: 'red',
+        width: '80%',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: 20,
+        height: 40,
+    },
+    txtSignGG: {
+        color: 'red',
+        fontSize: fontSizes.h5,
+        marginLeft: '10%',
+    },
+    txtSecurity: {
+        color: colors.inactive,
+        fontSize: fontSizes.h6,
+        width: '70%',
+        textAlign: 'center',
+        marginTop: 12,
+    },
+    view_1_1: {
+        height: 40,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 15,
+    },
+    view_1_1_1: {
+        backgroundColor: colors.inactive,
+        height: 1,
+        flex: 1,
+    },
+    txtOr: {
+        color: colors.inactive,
+        alignItems: 'center',
+        padding: 8,
+        fontSize: fontSizes.h5,
+    },
+    view_1_1_2: {
+        backgroundColor: colors.inactive,
+        height: 1,
+        flex: 1,
+    },
+    view_1_2: {
+        width: '85%',
+        marginTop: 14,
+    },
+    txtErrorEmail: {
+        color: 'red',
+        fontSize: fontSizes.h6,
+        marginBottom: 10,
+    },
+    txtErrorPass: {
+        color: 'red',
+        fontSize: fontSizes.h6,
+        marginBottom: 10,
+    },
+    view_1_3: {
+        marginTop: 15,
+        width: '78%',
+    },
+    txtSignSmall: {
+        padding: 8,
+        fontSize: fontSizes.h5,
+        color: 'white',
+    },
+    view_1_3_1: {
+        marginTop: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    txtRegister: {
+        paddingVertical: 10,
+        fontSize: fontSizes.h5,
+        color: colors.primary,
+    },
+    txtForgot: {
+        paddingVertical: 10,
+        fontSize: fontSizes.h5,
+        color: colors.primary,
+    },
+})
 
 export default Login

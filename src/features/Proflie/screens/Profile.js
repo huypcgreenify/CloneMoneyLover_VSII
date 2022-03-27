@@ -1,57 +1,28 @@
 import React, { useState } from "react"
-import { Text, View, SafeAreaView, Image, TouchableOpacity, Button, TextInput } from "react-native"
+import { StyleSheet, Text, View, Image, TouchableOpacity, } from "react-native"
 import { images, icons, colors, fontSizes } from '../../../constants'
 import { UIHeader } from '../../../components'
-import {
-    auth,
-    signOut,
-    GoogleSignin
-} from '../../../firebase/firebase'
-import Modal from "react-native-modal"
-import {
-    isValidEmail,
-    isValidPassword,
-    subEmailName
-} from '../../../utilies/Validations'
+import { auth, signOut, GoogleSignin } from '../../../firebase/firebase'
+import { subEmailName } from '../../../utilies/Validations'
 import ModalProfile from "../components/ModalProfile"
 
 const Profile = (props) => {
-console.log('1')
+
     const { navigate, goBack } = props.navigation
     const [isModalVisible, setModalVisible] = useState(false)
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     }
 
-    return <View style={{
-        flex: 1,
-    }}>
+    return <View style={styles.container}>
         <UIHeader
             title={'Quản lý tài khoản'}
         />
-        <View style={{
-            marginTop: 2,
-            flex: 0.35,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}>
-            <Image style={{
-                width: 100,
-                height: 100,
-                borderRadius: 80,
-                marginBottom: 20,
-                alignSelf: 'center',
-            }}
+        <View style={styles.view_1}>
+            <Image style={styles.imageUser}
                 source={images.userImage} />
-            <Text style={{
-                fontSize: 18,
-                color: 'black'
-            }}>{subEmailName()}</Text>
-            <Text style={{
-                fontSize: fontSizes.h5,
-                color: colors.text
-            }}>{auth.currentUser.email}</Text>
+            <Text style={styles.txtSubEmailName}>{subEmailName()}</Text>
+            <Text style={styles.txtCurrentUser}>{auth.currentUser.email}</Text>
         </View>
 
         <TouchableOpacity
@@ -64,10 +35,7 @@ console.log('1')
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-            <Text style={{
-                fontSize: fontSizes.h5,
-                color: colors.primary
-            }}>Thay đổi mật khẩu</Text>
+            <Text style={styles.txtForgot}>Thay đổi mật khẩu</Text>
         </TouchableOpacity>
         <ModalProfile isModalVisible={isModalVisible} toggleModal={toggleModal} />
         <TouchableOpacity
@@ -88,20 +56,54 @@ console.log('1')
                     console.log(error)
                 }
             }}
-            style={{
-                marginTop: 40,
-                flex: 0.08,
-                backgroundColor: 'white',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-            <Text style={{
-                fontSize: fontSizes.h5,
-                color: colors.primary,
-                fontWeight: 'bold'
-            }}>Đăng xuất</Text>
+            style={styles.touchableOpacitySignOut}>
+            <Text style={styles.txtSignOut}>Đăng xuất</Text>
         </TouchableOpacity>
     </View>
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    view_1: {
+        marginTop: 2,
+        flex: 0.35,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    imageUser: {
+        width: 100,
+        height: 100,
+        borderRadius: 80,
+        marginBottom: 20,
+        alignSelf: 'center',
+    },
+    txtSubEmailName: {
+        fontSize: 18,
+        color: 'black',
+    },
+    txtCurrentUser: {
+        fontSize: fontSizes.h5,
+        color: colors.text,
+    },
+    txtForgot: {
+        fontSize: fontSizes.h5,
+        color: colors.primary,
+    },
+    touchableOpacitySignOut: {
+        marginTop: 40,
+        flex: 0.08,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    txtSignOut: {
+        fontSize: fontSizes.h5,
+        color: colors.primary,
+        fontWeight: 'bold',
+    },
+})
 
 export default Profile

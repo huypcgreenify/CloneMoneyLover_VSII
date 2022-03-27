@@ -1,9 +1,9 @@
-import React, { useState } from "react"
-import { Text, View, Image, TouchableOpacity, Dimensions, useWindowDimensions } from "react-native"
+import React from "react"
+import { Text, View, } from "react-native"
 
 const PreviousMonths = (props) => {
     return <View>
-        <Text>pr</Text>
+        <Text>Comming Soon!</Text>
     </View>
 }
 

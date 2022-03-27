@@ -1,7 +1,5 @@
 import React, { useState } from "react"
 import { Text, View, TouchableOpacity } from "react-native"
-import { images, icons, colors, fontSizes } from '../../../constants'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
@@ -10,7 +8,6 @@ const DateTimePickerr = (props) => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date')
     const [show, setShow] = useState(false)
-    // const [text, setText] = useState(moment().format('DD-MM-YYYY'))
     const { text, setText } = props
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -42,20 +39,16 @@ const DateTimePickerr = (props) => {
                 color: 'black',
             }}>{text}</Text>
         </TouchableOpacity>
-        {
-            show && (
-                <DateTimePicker
-                    format={'DD-MM-YYYY'}
-                    style={{ flex: 1, backgroundColor: 'red' }}
-                    testID="dateTimePicker"
-                    value={date}
-                    mode={mode}
-                    is24Hour={true}
-                    display="default"
-                    onChange={onChange}
-                />
-            )
-        }
+        {show && (<DateTimePicker
+            format={'DD-MM-YYYY'}
+            style={{ flex: 1, backgroundColor: 'red' }}
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+        />)}
     </View >
 }
 

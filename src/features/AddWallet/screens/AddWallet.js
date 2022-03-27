@@ -1,42 +1,14 @@
-import React, {
-    useState,
-    useEffect,
-    useCallback
-} from "react"
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    Image,
-    TextInput,
-    KeyboardAvoidingView,
-    ScrollView,
-    Alert,
-    BackHandler
-} from "react-native"
+import React, { useState, } from "react"
+import {Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView,} from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import DateTimePickerr from '../components/DateTimePickerr'
 import { isValInput } from '../../../utilies/Validations'
 import ItemPickerGroup from '../components/ItemPickerGroup'
-import {
-    auth,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
-    firebaseDatabase,
-    doc,
-    setDoc,
-    collection,
-    GoogleSignin,
-    GoogleAuthProvider,
-    signInWithCredential,
-    addDoc,
-    getDocs,
-    getDoc,
-    query
-} from '../../../firebase/firebase'
+import { auth, firebaseDatabase, doc, setDoc, collection, updateDoc, } from '../../../firebase/firebase'
 import moment from 'moment'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const AddWallet = (props) => {
 
@@ -45,7 +17,10 @@ const AddWallet = (props) => {
     const [selectedValueGroup, setSelectedValueGroup] = useState('')
     const [descriptionAdd, setDescriptionAdd] = useState('')
     const [text, setText] = useState(moment().format('DD-MM-YYYY'))
-    const [adu, setAdu] = useState([])
+
+    const isValidtionOk = () => money.length > 0
+        && selectedValueGroup.length != ''
+
     const guidGenerator = () => {
         const S4 = () => {
             return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -67,6 +42,7 @@ const AddWallet = (props) => {
             flex: 1,
         }}>
         <UIHeader
+            isCheck={isValidtionOk()}
             title={'Thêm Giao Dịch'}
             leftIconName={'arrow-left'}
             textUIHeader={'Lưu'}
@@ -85,9 +61,20 @@ const AddWallet = (props) => {
                     textTime: text,
                     idWalletGD: guidGenerator(),
                     type: subStringType
-                }).then(() => {
-                    setDefaultValue()
-                    goBack()
+                }).then(async () => {
+                    try {
+                        let moneyTotal = await AsyncStorage.getItem('numberMoneyWallet')
+                        let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
+                        await updateDoc(newUserRef, {
+                            numberMoneyWallet: subStringType == 'thu'
+                                ? parseInt(moneyTotal) + parseInt(money)
+                                : parseInt(moneyTotal) - parseInt(money),
+                        })
+                        setDefaultValue()
+                        goBack()
+                    } catch (error) {
+                        console.log(error)
+                    }
                 }).catch((error) => {
                     console.log(error)
                 })
@@ -136,7 +123,6 @@ const AddWallet = (props) => {
                         marginBottom: 10,
                         flex: 0.2,
                         justifyContent: 'center',
-
                     }}>
                         <View
                             style={{
@@ -152,7 +138,7 @@ const AddWallet = (props) => {
                         </View>
                     </View>
                     <View style={{
-                        marginTop: 2,
+                        marginTop: 5,
                         marginBottom: 5,
                         justifyContent: 'center',
                         flex: 0.2
@@ -177,7 +163,7 @@ const AddWallet = (props) => {
                         <View
                             style={{
                                 justifyContent: 'center',
-                                alignItems: 'center',
+                                alignSelf: 'center',
                                 borderRadius: 30,
                             }}>
                             <Icon
@@ -220,6 +206,7 @@ const AddWallet = (props) => {
                             fontSize: fontSizes.h5,
                         }}>Số tiền</Text>
                         <TextInput
+                            maxLength={12}
                             value={money}
                             onChangeText={(text) => {
                                 { isValInput(text) || text === '' ? setMoney(text) : '' }
@@ -262,6 +249,7 @@ const AddWallet = (props) => {
                                 alignItems: 'center',
                             }}>
                             <TextInput
+                                value={descriptionAdd}
                                 placeholderTextColor={colors.text}
                                 onChangeText={(text) => {
                                     setDescriptionAdd(text)
@@ -305,7 +293,16 @@ const AddWallet = (props) => {
                                 flexDirection: 'column',
                                 alignItems: 'center',
                             }}>
-                            {adu.map((gigi) => {
+                            <View style={{
+                                flexDirection: 'column'
+                            }}><Text style={{
+                                fontSize: 16,
+                                color: 'black',
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                            }}></Text>
+                            </View>
+                            {/* {adu.map((gigi) => {
                                 return <View style={{
                                     flexDirection: 'column'
                                 }}><Text style={{
@@ -315,13 +312,12 @@ const AddWallet = (props) => {
                                     textAlign: 'center',
                                 }}>{gigi.money}</Text>
                                 </View>
-                            })}
+                            })} */}
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
         </ScrollView>
-
     </KeyboardAvoidingView>
 }
 
