@@ -2,19 +2,26 @@ import React, { useState, useEffect } from "react"
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, } from "react-native"
 import { colors, fontSizes, images } from '../../../constants'
 import ItemTransition from './ItemTransition'
-import { auth, firebaseDatabase, collection, query, onSnapshot, } from '../../../firebase/firebase'
+import { auth, firebaseDatabase, collection, query, onSnapshot, where } from '../../../firebase/firebase'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import moment from 'moment'
 
 const ThisMonth = (props) => {
 
     const { navigate, goBack } = props.navigation
+    const [usersLists, setUsersLists] = useState([])
+    const [numberMoneyWalletList, setNumberMoneyWalletList] = useState('')
     const [usersList, setUsersList] = useState([])
     const calculateIncome = usersList.filter((usersType) => {
         return usersType.type === 'thu'
     }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
+    const tinhToan = () => {
+        return Number(calculateIncome) + Number(numberMoneyWalletList)
+    }
     const calculateExpense = usersList.filter((usersType) => {
         return usersType.type === 'chi'
     }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
-    const moneyChange = calculateIncome - calculateExpense
+    const moneyChange = tinhToan() - calculateExpense
     useEffect(() => {
         const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
         onSnapshot(q, (querySnapshot) =>
@@ -23,21 +30,37 @@ const ThisMonth = (props) => {
                 id: details.id
             }))))
     }, [])
+    useEffect(() => {
+        const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
+        onSnapshot(q, (querySnapshot) =>
+            setUsersLists(querySnapshot.docs.map((details) => ({
+                ...details.data(),
+                id: details.id
+            }))))
+    }, [])
+    useEffect(() => {
+        const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
+        onSnapshot(q, (querySnapshot) =>
+            setNumberMoneyWalletList(querySnapshot.docs.map((details) => {
+                console.log(details.data().numberMoneyWalletCalculate)
+                return details.data().numberMoneyWalletCalculate
+            })))
+    }, [])
 
-    // useEffect(() => {
-    //     const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
-    //     onSnapshot(q, (querySnapshot) =>
-    //         setNumberMoneyWalletList(querySnapshot.docs.map((details) => {
-    //             console.log(details.data().numberMoneyWallet)
-    //             return details.data().numberMoneyWallet
-    //         })))
-    // }, [])
+    const newArray = []
+    usersLists.forEach(obj => {
+        if (!newArray.some(o => o.textTime === obj.textTime)) {
+            newArray.push({ ...obj })
+        }
+    })
+    const sortedDates = newArray.sort((dateA, dateB) => moment().format(dateB.createdAt) - moment().format(dateA.createdAt))
+    console.log(sortedDates)
 
     return <View style={styles.container}>
         <View style={styles.view_1}>
             <View style={styles.view_1_1}>
                 <Text style={styles.txtMoneyIncome}>Tiền vào</Text>
-                <Text style={styles.txtCaculateInCome}>{calculateIncome} ₫</Text>
+                <Text style={styles.txtCaculateInCome}>{tinhToan()} ₫</Text>
             </View>
             <View style={styles.view_1_2}>
                 <Text style={styles.txtExpense}>Tiền ra</Text>
@@ -52,21 +75,23 @@ const ThisMonth = (props) => {
             </View>
         </View>
         <FlatList
-            data={usersList}
+            data={sortedDates}
             style={styles.flShowTransaction}
             keyExtractor={(item, index) => (item + index)}
             listKey={(item, index) => (item + index)}
-            renderItem={({ item, index }) =>
-                <TouchableOpacity
+            renderItem={({ item, index }) => {
+                return (<TouchableOpacity
                     onPress={() => {
-                        navigate('EditTransactionBook')
+                        // navigate('EditTransactionBook')
                     }}>
                     <ItemTransition
-                        item={item}
+                        key={item + index}
+                        item2={item}
                         index={index}
-                        key={item.id}
-                    /></TouchableOpacity>
-            } />
+                        usersListss={usersList}
+                    />
+                </TouchableOpacity>)
+            }} />
     </View>
 }
 

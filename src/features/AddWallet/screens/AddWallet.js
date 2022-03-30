@@ -1,5 +1,5 @@
 import React, { useState, } from "react"
-import {Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView,} from "react-native"
+import { Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, } from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -68,7 +68,13 @@ const AddWallet = (props) => {
                         await updateDoc(newUserRef, {
                             numberMoneyWallet: subStringType == 'thu'
                                 ? parseInt(moneyTotal) + parseInt(money)
-                                : parseInt(moneyTotal) - parseInt(money),
+                                : parseInt(moneyTotal) - parseInt(money)
+                        })
+                        const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
+                        await setDoc(colRef, {
+                            money: money,
+                            textTime: text,
+                            createdAt: moment().format('DD-MM-YYYY HH:mm:ss'),
                         })
                         setDefaultValue()
                         goBack()

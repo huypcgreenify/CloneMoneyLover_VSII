@@ -152,6 +152,7 @@ const AddWalletTransaction = (props) => {
                                 email,
                                 nameWallet: nameWallet,
                                 numberMoneyWallet: numberMoneyWallet,
+                                numberMoneyWalletCalculate: numberMoneyWallet
                             })
                             navigate('UITabView')
                             console.log(re)

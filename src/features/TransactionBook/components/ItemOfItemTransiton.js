@@ -20,7 +20,11 @@ const ItemOfItemTransiton = (props) => {
                 <Text style={styles.txtDescriptionAdd}>{item.descriptionAdd}</Text>
             </View>
             <View style={styles.view_2_2}>
-                <Text style={styles.txtMoney}>{item.money}</Text>
+            <Text style={{
+                        fontSize: fontSizes.h5,
+                        textAlign: 'right',
+                        color: item.type === 'chi' ? 'red' : 'blue',
+                    }}>{item.money}</Text>
             </View>
         </View>
     </View>

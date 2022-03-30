@@ -17,11 +17,8 @@ const TransactionBook = (props) => {
             querySnapshot.docs.map((details) => {
                 storageObject.nameWallet = details.data().nameWallet
                 storageObject.numberMoneyWallet = details.data().numberMoneyWallet
-                storageObject.numberMoneyWallett = details.data().numberMoneyWallett
-            })
-            querySnapshot.docs.map((details) => {
+                storageObject.numberMoneyWalletCalculate = details.data().numberMoneyWalletCalculate
                 storageData = details.data().numberMoneyWallet
-                console.log(storageData)
             })
             setMoneyWalletList(storageObject)
             AsyncStorage.setItem('numberMoneyWallet', storageData.toString())
