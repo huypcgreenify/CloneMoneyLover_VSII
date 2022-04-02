@@ -9,6 +9,7 @@ import ItemPickerGroup from '../components/ItemPickerGroup'
 import { auth, firebaseDatabase, doc, setDoc, collection, updateDoc, } from '../../../firebase/firebase'
 import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { guidGenerator } from "../../../utilies/Validations"
 
 const AddWallet = (props) => {
 
@@ -17,17 +18,8 @@ const AddWallet = (props) => {
     const [selectedValueGroup, setSelectedValueGroup] = useState('')
     const [descriptionAdd, setDescriptionAdd] = useState('')
     const [text, setText] = useState(moment().format('DD-MM-YYYY'))
-
     const isValidtionOk = () => money.length > 0
         && selectedValueGroup.length != ''
-
-    const guidGenerator = () => {
-        const S4 = () => {
-            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-        }
-        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-    }
-
     const setDefaultValue = () => {
         setMoney(0)
         setSelectedValueGroup('')
@@ -51,11 +43,12 @@ const AddWallet = (props) => {
                 goBack()
             }}
             onPressRightIcon={async () => {
+                const checkNumberZero = money - 0
                 const subStringSelect = selectedValueGroup.slice(0, selectedValueGroup.length - 4)
                 const subStringType = selectedValueGroup.slice(-3)
                 const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
                 await setDoc(colRef, {
-                    money: money,
+                    money: checkNumberZero,
                     selectedValueGroup: subStringSelect,
                     descriptionAdd: descriptionAdd,
                     textTime: text,
@@ -74,7 +67,6 @@ const AddWallet = (props) => {
                         await setDoc(colRef, {
                             money: money,
                             textTime: text,
-                            createdAt: moment().format('DD-MM-YYYY HH:mm:ss'),
                         })
                         setDefaultValue()
                         goBack()

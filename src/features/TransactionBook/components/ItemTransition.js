@@ -3,21 +3,22 @@ import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from "react
 import { colors, fontSizes, images } from '../../../constants'
 import moment from 'moment'
 import ItemOfItemTransiton from "./ItemOfItemTransiton"
+import { isValFormatMoney } from '../../../utilies/Validations'
 
 const ItemTransition = (props) => {
 
     const {
         item2,
         index,
-        usersListss
+        usersListWallets
     } = props
     const checkDate = item2.textTime
     const subStringDay = checkDate.slice(0, checkDate.length - 8)
     const subStringMonthYear = checkDate.slice(- 7)
-    const calculate = usersListss.filter((usersType) => {
+    const calculate = usersListWallets.filter((usersType) => {
         return usersType.textTime === item2.textTime && usersType.type === 'thu'
     }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
-    const calculate2 = usersListss.filter((usersType) => {
+    const calculate2 = usersListWallets.filter((usersType) => {
         return usersType.textTime === item2.textTime && usersType.type === 'chi'
     }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
     const moneyChange = calculate - calculate2
@@ -34,19 +35,23 @@ const ItemTransition = (props) => {
                     flex: 0.5,
                     flexDirection: 'column',
                 }}>
-                    <Text style={styles.txtTextTime}>{moment().format('DD-MM-YYYY') == moment().format(item2.textTime) ? 'Hôm nay' : moment().format('DD-MM-YYYY') > moment().format(item2.textTime) ? 'Các ngày khác' : 'Tương lai'}</Text>
+                    <Text style={styles.txtTextTime}>
+                        {moment(moment().format('DD-MM-YYYY'), 'DD-MM-YYYY') > moment(item2.textTime, 'DD-MM-YYYY')
+                            ? 'Các ngày trước' : moment(moment().format('DD-MM-YYYY'), 'DD-MM-YYYY') < moment(item2.textTime, 'DD-MM-YYYY')
+                                ? 'Tương lai'
+                                : 'Hôm nay'}</Text>
                     <Text style={styles.txtSubStringMonthYear}>tháng {subStringMonthYear}</Text>
                 </View>
                 <View style={{
                     flex: 0.5
                 }}>
-                    <Text style={styles.txtMoney}>{moneyChange >= 0 ? '+' : ''}{moneyChange} ₫</Text>
+                    <Text style={styles.txtMoney}>{moneyChange >= 0 ? '+' : ''}{isValFormatMoney(moneyChange)} ₫</Text>
                 </View>
             </View>
         </View>
 
         <FlatList
-            data={usersListss}
+            data={usersListWallets}
             style={styles.flShowTransaction}
             keyExtractor={(item, index) => (item + index)}
             listKey={(item, index) => (item + index)}

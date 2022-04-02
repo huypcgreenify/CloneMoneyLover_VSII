@@ -13,29 +13,23 @@ import { isValInput } from '../../../utilies/Validations'
 import {
     auth,
     createUserWithEmailAndPassword,
-    onAuthStateChanged,
     firebaseDatabase,
     doc,
     setDoc,
     collection,
-    GoogleSignin,
-    GoogleAuthProvider,
-    signInWithCredential,
-    addDoc,
-    getDocs,
-    getDoc,
-    query
 } from '../../../firebase/firebase'
+import { guidGenerator } from "../../../utilies/Validations"
+import moment from 'moment'
 
 const AddWalletTransaction = (props) => {
 
     const { navigate, goBack } = props.navigation
     const { email, password } = props.route.params
-
     const [nameWallet, setNameWallet] = useState('Tiền mặt')
     const [numberMoneyWallet, setNumberMoneyWallet] = useState('')
     const [focusNameWallet, setFocusNameWallet] = useState(false)
     const [focusNumberMoneyWallet, setFocusNumberMoneyWallet] = useState(false)
+    const [text, setText] = useState(moment().format('DD-MM-YYYY'))
     const isValidtionOk = () => nameWallet.length > 0
         && numberMoneyWallet.length > 0
 
@@ -145,31 +139,37 @@ const AddWalletTransaction = (props) => {
             <TouchableOpacity
                 disabled={!isValidtionOk() == true}
                 onPress={async () => {
+                    const checkNumberZero = numberMoneyWallet - 0
                     createUserWithEmailAndPassword(auth, email, password)
                         .then(async (re) => {
                             let newUserRef = doc(firebaseDatabase, 'users', email)
+                            let colRefWallets = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+                            let colRefTimeline = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
                             await setDoc(newUserRef, {
                                 email,
                                 nameWallet: nameWallet,
-                                numberMoneyWallet: numberMoneyWallet,
-                                numberMoneyWalletCalculate: numberMoneyWallet
+                                numberMoneyWallet: checkNumberZero,
+                                numberMoneyWalletCalculate: 0,
                             })
+                            if (checkNumberZero != 0) {
+                                await setDoc(colRefWallets, {
+                                    money: checkNumberZero,
+                                    selectedValueGroup: 'Thu nhập khác',
+                                    descriptionAdd: 'Số tiền hiện có',
+                                    textTime: text,
+                                    idWalletGD: guidGenerator(),
+                                    type: 'thu',
+                                })
+                                await setDoc(colRefTimeline, {
+                                    money: checkNumberZero,
+                                    textTime: text,
+                                })
+                            }
                             navigate('UITabView')
                             console.log(re)
                         }).catch((re) => {
                             console.log(re)
                         })
-                    // const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallettransaction'))
-                    // await setDoc(colRef, {
-
-                    // }).then(() => {
-                    //     console.log('OK')
-                    //     navigate('UITabView')
-                    // }).catch((error) => {
-                    //     console.log(error)
-                    // })
-                    // console.log(colRef.id)
-
                 }}
                 style={{
                     marginTop: 60,

@@ -146,7 +146,7 @@ const Register = (props) => {
                                     flag = false
                                 }
                             })
-                            flag ? navigate('AddWalletTransaction', { email: email, password: password }) : alert('Tài khoản đã có!')
+                            flag ? navigate('AddWalletTransaction', { email: email, password: password }) : alert('Tài khoản đã tồn tại!')
                         }}
                         style={{
                             backgroundColor: isValidtionOk() == true ? colors.primary : colors.inactive,

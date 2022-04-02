@@ -140,8 +140,15 @@ const Login = (props) => {
                                     console.log(re)
                                     navigate('UITabView')
                                 }).catch((error) => {
-                                    console.log(error)
-                                    alert(`Cannot sign in, error: ${error.message}`)
+                                    let errorCode = error.code;
+                                    let errorMessage = error.message;
+                                    console.log(errorCode)
+                                    console.log(errorMessage)
+                                    errorCode === 'auth/user-not-found'
+                                        ? alert('Tài khoản không tồn tại!')
+                                        : (errorCode === 'auth/wrong-password' ? alert('Nhập sai mật khẩu!')
+                                            : (errorCode === 'auth/too-many-requests' ? alert('Đăng nhập quá nhiều!')
+                                                : alert('Có lỗi xảy ra, vui lòng thử lại!')))
                                 })
                         }}
                         style={{

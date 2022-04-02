@@ -3,75 +3,69 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, } from "react-nativ
 import { colors, fontSizes, images } from '../../../constants'
 import ItemTransition from './ItemTransition'
 import { auth, firebaseDatabase, collection, query, onSnapshot, where } from '../../../firebase/firebase'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { isValFormatMoney } from '../../../utilies/Validations'
 import moment from 'moment'
 
 const ThisMonth = (props) => {
 
-    const { navigate, goBack } = props.navigation
     const [usersLists, setUsersLists] = useState([])
     const [numberMoneyWalletList, setNumberMoneyWalletList] = useState('')
-    const [usersList, setUsersList] = useState([])
-    const calculateIncome = usersList.filter((usersType) => {
+    const [usersListWallets, setUsersListWallets] = useState([])
+    const calculateIncome = usersListWallets.filter((usersType) => {
         return usersType.type === 'thu'
     }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
     const tinhToan = () => {
         return Number(calculateIncome) + Number(numberMoneyWalletList)
     }
-    const calculateExpense = usersList.filter((usersType) => {
+    const calculateExpense = usersListWallets.filter((usersType) => {
         return usersType.type === 'chi'
     }).reduce((total, currentValue) => total = total + Number(currentValue.money), 0)
     const moneyChange = tinhToan() - calculateExpense
-    useEffect(() => {
-        const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
-        onSnapshot(q, (querySnapshot) =>
-            setUsersList(querySnapshot.docs.map((details) => ({
-                ...details.data(),
-                id: details.id
-            }))))
-    }, [])
-    useEffect(() => {
-        const q = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
-        onSnapshot(q, (querySnapshot) =>
-            setUsersLists(querySnapshot.docs.map((details) => ({
-                ...details.data(),
-                id: details.id
-            }))))
-    }, [])
-    useEffect(() => {
-        const q = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
-        onSnapshot(q, (querySnapshot) =>
-            setNumberMoneyWalletList(querySnapshot.docs.map((details) => {
-                console.log(details.data().numberMoneyWalletCalculate)
-                return details.data().numberMoneyWalletCalculate
-            })))
-    }, [])
-
     const newArray = []
     usersLists.forEach(obj => {
         if (!newArray.some(o => o.textTime === obj.textTime)) {
             newArray.push({ ...obj })
         }
     })
-    const sortedDates = newArray.sort((dateA, dateB) => moment().format(dateB.createdAt) - moment().format(dateA.createdAt))
-    console.log(sortedDates)
+    const sortedDates = newArray.sort((dateA, dateB) => moment(dateB.textTime, 'DD-MM-YYYY') - moment(dateA.textTime, 'DD-MM-YYYY'))
+
+    useEffect(() => {
+        const qWallets = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+        const qTimeline = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
+        const qCaculate = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
+        onSnapshot(qWallets, (querySnapshot) =>
+        setUsersListWallets(querySnapshot.docs.map((details) => ({
+                ...details.data(),
+                id: details.id
+            }))))
+        onSnapshot(qTimeline, (querySnapshot) =>
+            setUsersLists(querySnapshot.docs.map((details) => ({
+                ...details.data(),
+                id: details.id
+            }))))
+        onSnapshot(qCaculate, (querySnapshot) =>
+            setNumberMoneyWalletList(querySnapshot.docs.map((details) => {
+                console.log(details.data().numberMoneyWalletCalculate)
+                return details.data().numberMoneyWalletCalculate
+            })))
+    }, [])
 
     return <View style={styles.container}>
         <View style={styles.view_1}>
             <View style={styles.view_1_1}>
                 <Text style={styles.txtMoneyIncome}>Tiền vào</Text>
-                <Text style={styles.txtCaculateInCome}>{tinhToan()} ₫</Text>
+                <Text style={styles.txtCaculateInCome}>{isValFormatMoney(tinhToan())} ₫</Text>
             </View>
             <View style={styles.view_1_2}>
                 <Text style={styles.txtExpense}>Tiền ra</Text>
-                <Text style={styles.txtCaculateExpense}>{calculateExpense} ₫</Text>
+                <Text style={styles.txtCaculateExpense}>{isValFormatMoney(calculateExpense)} ₫</Text>
             </View>
             <View style={styles.view_1_3}>
                 <View style={styles.view_1_3_1}></View>
                 <View style={styles.view_1_3_2}></View>
             </View>
             <View style={styles.view_1_4}>
-                <Text style={styles.txtMoneyChange}>{moneyChange} ₫</Text>
+                <Text style={styles.txtMoneyChange}>{isValFormatMoney(moneyChange)} ₫</Text>
             </View>
         </View>
         <FlatList
@@ -80,17 +74,14 @@ const ThisMonth = (props) => {
             keyExtractor={(item, index) => (item + index)}
             listKey={(item, index) => (item + index)}
             renderItem={({ item, index }) => {
-                return (<TouchableOpacity
-                    onPress={() => {
-                        // navigate('EditTransactionBook')
-                    }}>
+                return (<View>
                     <ItemTransition
                         key={item + index}
                         item2={item}
                         index={index}
-                        usersListss={usersList}
+                        usersListWallets={usersListWallets}
                     />
-                </TouchableOpacity>)
+                </View>)
             }} />
     </View>
 }
