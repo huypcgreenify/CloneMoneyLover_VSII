@@ -141,10 +141,10 @@ const AddWalletTransaction = (props) => {
                 disabled={!isValidtionOk() == true}
                 onPress={async (obj) => {
                     try {
-                        console.log('Last time: ', obj.nativeEvent.timestamp);
+                        console.log('Last time: ', obj.nativeEvent.timestamp)
                         if ((obj.nativeEvent.timestamp - lastTime) > 1500) {
-                            console.log('First time: ', obj.nativeEvent.timestamp);
-                            setLastTime(obj.nativeEvent.timestamp);
+                            console.log('First time: ', obj.nativeEvent.timestamp)
+                            setLastTime(obj.nativeEvent.timestamp)
                             const removeReplace = numberMoneyWallet.replace(/,/g, '')
                             const checkNumberZero = removeReplace - 0
                             createUserWithEmailAndPassword(auth, email, password)
@@ -188,7 +188,7 @@ const AddWalletTransaction = (props) => {
                             return;
                         }
                     } catch (e) {
-                        console.log(e);
+                        console.log(e)
                     }
                 }}
                 style={{

@@ -48,8 +48,8 @@ const AddWallet = (props) => {
                 try {
                     console.log('Last time: ', obj.nativeEvent.timestamp)
                     if ((obj.nativeEvent.timestamp - lastTime) > 1500) {
-                        console.log('First time: ', obj.nativeEvent.timestamp);
-                        setLastTime(obj.nativeEvent.timestamp);
+                        console.log('First time: ', obj.nativeEvent.timestamp)
+                        setLastTime(obj.nativeEvent.timestamp)
                         const removeReplace = money.replace(/,/g, '')
                         const checkNumberZero = removeReplace - 0
                         const subStringSelect = selectedValueGroup.slice(0, selectedValueGroup.length - 4)
@@ -88,7 +88,7 @@ const AddWallet = (props) => {
                         return;
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.log(e)
                 }
             }}
         />
