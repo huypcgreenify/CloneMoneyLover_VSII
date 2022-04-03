@@ -8,6 +8,7 @@ const ItemOfItemTransiton = (props) => {
     const {
         item,
         index,
+        sortedMoney
     } = props
 
     return <View style={styles.container}>

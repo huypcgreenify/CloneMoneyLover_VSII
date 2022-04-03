@@ -28,13 +28,18 @@ const ThisMonth = (props) => {
         }
     })
     const sortedDates = newArray.sort((dateA, dateB) => moment(dateB.textTime, 'DD-MM-YYYY') - moment(dateA.textTime, 'DD-MM-YYYY'))
-
+    const newArrayWallets = []
+    usersListWallets.forEach(obj => {
+        newArrayWallets.push({ ...obj })
+    })
+    const sortedMoney = newArrayWallets.sort((moneyA, moneyB) => Number(moneyB.money) - Number(moneyA.money))
+    console.log(sortedMoney)
     useEffect(() => {
         const qWallets = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
         const qTimeline = query(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
         const qCaculate = query(collection(firebaseDatabase, 'users'), where('email', '==', auth.currentUser.email))
         onSnapshot(qWallets, (querySnapshot) =>
-        setUsersListWallets(querySnapshot.docs.map((details) => ({
+            setUsersListWallets(querySnapshot.docs.map((details) => ({
                 ...details.data(),
                 id: details.id
             }))))
@@ -79,7 +84,7 @@ const ThisMonth = (props) => {
                         key={item + index}
                         item2={item}
                         index={index}
-                        usersListWallets={usersListWallets}
+                        usersListWallets={sortedMoney}
                     />
                 </View>)
             }} />
