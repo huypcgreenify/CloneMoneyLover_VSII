@@ -12,7 +12,7 @@ const UIHeader = (props) => {
         onPressLeftIcon,
         onPressRightIcon,
         textUIHeader,
-        isCheck
+        isCheck,
     } = props
 
     return <View style={{

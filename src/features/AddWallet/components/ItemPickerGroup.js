@@ -27,7 +27,7 @@ const ItemPickerGroup = (props) => {
             <Picker.Item label='Bảo dưỡng xe' value='Bảo dưỡng xe chi' />
             <Picker.Item label='Khoản thu' enabled={false} />
             <Picker.Item label='Tiền lương' value='Tiền lương thu' />
-            <Picker.Item label='Thu nhập khác' value='Giáo dục thu' />
+            <Picker.Item label='Thu nhập khác' value='Thu nhập khác thu' />
         </Picker>
     </View >
 }

@@ -13,29 +13,24 @@ import { isValInput } from '../../../utilies/Validations'
 import {
     auth,
     createUserWithEmailAndPassword,
-    onAuthStateChanged,
     firebaseDatabase,
     doc,
     setDoc,
     collection,
-    GoogleSignin,
-    GoogleAuthProvider,
-    signInWithCredential,
-    addDoc,
-    getDocs,
-    getDoc,
-    query
 } from '../../../firebase/firebase'
+import { guidGenerator, formatMoneyInput } from "../../../utilies/Validations"
+import moment from 'moment'
 
 const AddWalletTransaction = (props) => {
 
     const { navigate, goBack } = props.navigation
     const { email, password } = props.route.params
-
+    const [lastTime, setLastTime] = useState(0)
     const [nameWallet, setNameWallet] = useState('Tiền mặt')
     const [numberMoneyWallet, setNumberMoneyWallet] = useState('')
     const [focusNameWallet, setFocusNameWallet] = useState(false)
     const [focusNumberMoneyWallet, setFocusNumberMoneyWallet] = useState(false)
+    const [text, setText] = useState(moment().format('DD-MM-YYYY'))
     const isValidtionOk = () => nameWallet.length > 0
         && numberMoneyWallet.length > 0
 
@@ -121,10 +116,10 @@ const AddWalletTransaction = (props) => {
                 marginTop: 30
             }}>Số dư</Text>
             <TextInput
-                maxLength={12}
+                maxLength={15}
                 value={numberMoneyWallet}
                 onChangeText={(text) => {
-                    { isValInput(text) || text === '' ? setNumberMoneyWallet(text) : '' }
+                    { isValInput(text) || text === '' ? setNumberMoneyWallet(formatMoneyInput(text)) : '' }
                 }}
                 keyboardType='numeric'
                 onFocus={() => {
@@ -144,31 +139,57 @@ const AddWalletTransaction = (props) => {
             />
             <TouchableOpacity
                 disabled={!isValidtionOk() == true}
-                onPress={async () => {
-                    createUserWithEmailAndPassword(auth, email, password)
-                        .then(async (re) => {
-                            let newUserRef = doc(firebaseDatabase, 'users', email)
-                            await setDoc(newUserRef, {
-                                email,
-                                nameWallet: nameWallet,
-                                numberMoneyWallet: numberMoneyWallet,
-                            })
-                            navigate('UITabView')
-                            console.log(re)
-                        }).catch((re) => {
-                            console.log(re)
-                        })
-                    // const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallettransaction'))
-                    // await setDoc(colRef, {
-
-                    // }).then(() => {
-                    //     console.log('OK')
-                    //     navigate('UITabView')
-                    // }).catch((error) => {
-                    //     console.log(error)
-                    // })
-                    // console.log(colRef.id)
-
+                onPress={async (obj) => {
+                    try {
+                        console.log('Last time: ', obj.nativeEvent.timestamp);
+                        if ((obj.nativeEvent.timestamp - lastTime) > 1500) {
+                            console.log('First time: ', obj.nativeEvent.timestamp);
+                            setLastTime(obj.nativeEvent.timestamp);
+                            const removeReplace = numberMoneyWallet.replace(/,/g, '')
+                            const checkNumberZero = removeReplace - 0
+                            createUserWithEmailAndPassword(auth, email, password)
+                                .then(async (re) => {
+                                    let newUserRef = doc(firebaseDatabase, 'users', email)
+                                    let colRefWallets = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+                                    let colRefTimeline = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
+                                    await setDoc(newUserRef, {
+                                        email,
+                                        nameWallet: nameWallet,
+                                        numberMoneyWallet: checkNumberZero,
+                                        numberMoneyWalletCalculate: 0,
+                                    })
+                                    if (checkNumberZero != 0) {
+                                        await setDoc(colRefWallets, {
+                                            money: checkNumberZero,
+                                            selectedValueGroup: 'Thu nhập khác',
+                                            descriptionAdd: 'Số tiền hiện có',
+                                            textTime: text,
+                                            idWalletGD: guidGenerator(),
+                                            type: 'thu',
+                                        })
+                                        await setDoc(colRefTimeline, {
+                                            money: checkNumberZero,
+                                            textTime: text,
+                                        })
+                                    }
+                                    navigate('UITabView')
+                                    console.log(re)
+                                }).catch((error) => {
+                                    console.log(error)
+                                    let errorCode = error.code;
+                                    let errorMessage = error.message;
+                                    console.log(errorCode)
+                                    console.log(errorMessage)
+                                    errorCode === 'auth/email-already-in-use'
+                                        ? alert('Tài khoản đang được sử dụng! Vui lòng thoát ứng dụng')
+                                        : alert('Có lỗi xảy ra, vui lòng thử lại!')
+                                })
+                        } else {
+                            return;
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }}
                 style={{
                     marginTop: 60,

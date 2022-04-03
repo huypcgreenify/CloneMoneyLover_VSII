@@ -1,12 +1,14 @@
 import React from "react"
 import { StyleSheet, Text, View, Image, } from "react-native"
 import { colors, fontSizes, images } from '../../../constants'
+import { isValFormatMoney } from '../../../utilies/Validations'
 
 const ItemOfItemTransiton = (props) => {
 
     const {
         item,
         index,
+        sortedMoney
     } = props
 
     return <View style={styles.container}>
@@ -17,10 +19,14 @@ const ItemOfItemTransiton = (props) => {
         <View style={styles.view_2}>
             <View style={styles.view_2_1}>
                 <Text style={styles.txtSelctValueGr}>{item.selectedValueGroup}</Text>
-                <Text style={styles.txtDescriptionAdd}>{item.descriptionAdd}</Text>
+                <Text style={styles.txtDescriptionAdd} numberOfLines={1}>{item.descriptionAdd}</Text>
             </View>
             <View style={styles.view_2_2}>
-                <Text style={styles.txtMoney}>{item.money}</Text>
+                <Text style={{
+                    fontSize: fontSizes.h5,
+                    textAlign: 'right',
+                    color: item.type === 'chi' ? 'red' : 'blue',
+                }}>{isValFormatMoney(item.money)}</Text>
             </View>
         </View>
     </View>

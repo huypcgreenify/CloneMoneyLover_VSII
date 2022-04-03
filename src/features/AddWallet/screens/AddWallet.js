@@ -1,5 +1,5 @@
-import React, { useState, } from "react"
-import {Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView,} from "react-native"
+import React, { useState, useRef } from "react"
+import { Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, } from "react-native"
 import { UIHeader } from '../../../components'
 import { images, icons, colors, fontSizes } from '../../../constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -9,25 +9,19 @@ import ItemPickerGroup from '../components/ItemPickerGroup'
 import { auth, firebaseDatabase, doc, setDoc, collection, updateDoc, } from '../../../firebase/firebase'
 import moment from 'moment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { guidGenerator, formatMoneyInput } from "../../../utilies/Validations"
 
 const AddWallet = (props) => {
 
+
     const { navigate, goBack } = props.navigation
+    const [lastTime, setLastTime] = useState(0)
     const [money, setMoney] = useState('')
     const [selectedValueGroup, setSelectedValueGroup] = useState('')
     const [descriptionAdd, setDescriptionAdd] = useState('')
     const [text, setText] = useState(moment().format('DD-MM-YYYY'))
-
-    const isValidtionOk = () => money.length > 0
-        && selectedValueGroup.length != ''
-
-    const guidGenerator = () => {
-        const S4 = () => {
-            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-        }
-        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-    }
-
+    const checkNumberZeroVal = money - 0
+    const isValidtionOk = () => checkNumberZeroVal != 0 && selectedValueGroup.length != ''
     const setDefaultValue = () => {
         setMoney(0)
         setSelectedValueGroup('')
@@ -50,34 +44,52 @@ const AddWallet = (props) => {
             onPressLeftIcon={() => {
                 goBack()
             }}
-            onPressRightIcon={async () => {
-                const subStringSelect = selectedValueGroup.slice(0, selectedValueGroup.length - 4)
-                const subStringType = selectedValueGroup.slice(-3)
-                const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
-                await setDoc(colRef, {
-                    money: money,
-                    selectedValueGroup: subStringSelect,
-                    descriptionAdd: descriptionAdd,
-                    textTime: text,
-                    idWalletGD: guidGenerator(),
-                    type: subStringType
-                }).then(async () => {
-                    try {
-                        let moneyTotal = await AsyncStorage.getItem('numberMoneyWallet')
-                        let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
-                        await updateDoc(newUserRef, {
-                            numberMoneyWallet: subStringType == 'thu'
-                                ? parseInt(moneyTotal) + parseInt(money)
-                                : parseInt(moneyTotal) - parseInt(money),
+            onPressRightIcon={async (obj) => {
+                try {
+                    console.log('Last time: ', obj.nativeEvent.timestamp)
+                    if ((obj.nativeEvent.timestamp - lastTime) > 1500) {
+                        console.log('First time: ', obj.nativeEvent.timestamp);
+                        setLastTime(obj.nativeEvent.timestamp);
+                        const removeReplace = money.replace(/,/g, '')
+                        const checkNumberZero = removeReplace - 0
+                        const subStringSelect = selectedValueGroup.slice(0, selectedValueGroup.length - 4)
+                        const subStringType = selectedValueGroup.slice(-3)
+                        const colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'wallets'))
+                        await setDoc(colRef, {
+                            money: checkNumberZero,
+                            selectedValueGroup: subStringSelect,
+                            descriptionAdd: descriptionAdd,
+                            textTime: text,
+                            idWalletGD: guidGenerator(),
+                            type: subStringType,
+                        }).then(async () => {
+                            try {
+                                let moneyTotal = await AsyncStorage.getItem('numberMoneyWallet')
+                                let newUserRef = doc(firebaseDatabase, 'users', auth.currentUser.email)
+                                let colRef = doc(collection(firebaseDatabase, 'users', auth.currentUser.email, 'timeline'))
+                                await updateDoc(newUserRef, {
+                                    numberMoneyWallet: subStringType == 'thu'
+                                        ? parseInt(moneyTotal) + parseInt(checkNumberZero)
+                                        : parseInt(moneyTotal) - parseInt(checkNumberZero)
+                                })
+                                await setDoc(colRef, {
+                                    money: checkNumberZero,
+                                    textTime: text,
+                                })
+                                setDefaultValue()
+                                navigate('TransactionBook')
+                            } catch (error) {
+                                console.log(error)
+                            }
+                        }).catch((error) => {
+                            console.log(error)
                         })
-                        setDefaultValue()
-                        goBack()
-                    } catch (error) {
-                        console.log(error)
+                    } else {
+                        return;
                     }
-                }).catch((error) => {
-                    console.log(error)
-                })
+                } catch (e) {
+                    console.log(e);
+                }
             }}
         />
         <ScrollView>
@@ -206,10 +218,10 @@ const AddWallet = (props) => {
                             fontSize: fontSizes.h5,
                         }}>Số tiền</Text>
                         <TextInput
-                            maxLength={12}
+                            maxLength={15}
                             value={money}
                             onChangeText={(text) => {
-                                { isValInput(text) || text === '' ? setMoney(text) : '' }
+                                isValInput(text) || text === '' ? setMoney(formatMoneyInput(text)) : ''
                             }}
                             placeholderTextColor={colors.text}
                             keyboardType='numeric'

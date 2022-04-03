@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import UITabTopTransactionBook from '../navigations/UITabTopTransactionBook'
 import { auth, firebaseDatabase, collection, query, onSnapshot, where, } from '../../../firebase/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { isValFormatMoney } from '../../../utilies/Validations'
 
 const TransactionBook = (props) => {
 
@@ -16,12 +17,9 @@ const TransactionBook = (props) => {
             let storageData = ''
             querySnapshot.docs.map((details) => {
                 storageObject.nameWallet = details.data().nameWallet
-                storageObject.numberMoneyWallet = details.data().numberMoneyWallet
-                storageObject.numberMoneyWallett = details.data().numberMoneyWallett
-            })
-            querySnapshot.docs.map((details) => {
+                storageObject.numberMoneyWallet = isValFormatMoney(details.data().numberMoneyWallet)
+                storageObject.numberMoneyWalletCalculate = details.data().numberMoneyWalletCalculate
                 storageData = details.data().numberMoneyWallet
-                console.log(storageData)
             })
             setMoneyWalletList(storageObject)
             AsyncStorage.setItem('numberMoneyWallet', storageData.toString())
