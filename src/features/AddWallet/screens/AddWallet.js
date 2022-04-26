@@ -13,7 +13,6 @@ import { guidGenerator, formatMoneyInput } from "../../../utilies/Validations"
 
 const AddWallet = (props) => {
 
-
     const { navigate, goBack } = props.navigation
     const [lastTime, setLastTime] = useState(0)
     const [money, setMoney] = useState('')
